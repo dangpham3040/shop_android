@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">shop_android</string>
+    //tác giả
+    <string name="tachgia">Phạm Hải Đăng</string>
+    //nút
+    <string name="add">Thêm</string>
+    <string name="del">Xoá</string>
+    <string name="Upadte">Sửa</string>
+    <string name="show">Hiển thị</string>
+
+    //place_hoder
+    <string name="fist">nhập Fistname: </string>
+    <string name="last">nhập LastName: </string>
+    <string name="email">nhập Email: </string>
+    <string name="pas">nhập Password: </string>
+    <string name="_pas">nhập lại Password: </string>
+    //tiêu đề
+    <string name="registration">registration</string>
+    <string name="fist_">FistName:</string>
+    <string name="last_">LastName:</string>
+    <string name="email_">Email:</string>
+    <string name="pass">Password:</string>
+    <string name="_pass">confirm Password:</string>
+    <string name="sex">sex:</string>
+    <string name="full">Fullname: </string>
+    <string name="register">register</string>
+    <string name="logout">Logout</string>
+    <string name="login">login</string>
+    //link
+    <string name="link_login"><font color='blue'> sign in!</font></string>
+    <!--    <string name="link_register">"<font color='#FF000000'> </font><font color= '#02157C'></font>"</string>-->
+    <string name="link_register"><font color='blue'> sign up!</font></string>
+    //chat bar
+    <string name="type">Type something...</string>
+    <string name="username">Username</string>
+    <string name="status">offline </string>
+
+    //spiner
+    <array name="sex">\
+        <item>Nam</item>
+        <item>Nữ</item>
+    </array>
+
+
+</resources>
