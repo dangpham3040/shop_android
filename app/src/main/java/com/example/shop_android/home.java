@@ -54,6 +54,7 @@ public class home extends AppCompatActivity {
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), Login.class));
                 fAuth.getInstance().signOut();
+
                 finish();
             }
         });

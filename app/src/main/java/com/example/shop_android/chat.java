@@ -18,12 +18,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class chat extends AppCompatActivity {
     private static final String TAG = "currentuser:";
-    ImageView ortherAvata,imgsend,imgbback;
+    ImageView ortherAvata, imgsend, imgbback;
     TextView fullname;
     EditText message;
     String otherID;
@@ -48,8 +49,8 @@ public class chat extends AppCompatActivity {
         ortherAvata.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(getApplicationContext(),profile.class);
-                intent.putExtra("otherID",otherID);
+                Intent intent = new Intent(getApplicationContext(), profile.class);
+                intent.putExtra("otherID", otherID);
                 startActivity(intent);
             }
         });
@@ -58,19 +59,44 @@ public class chat extends AppCompatActivity {
     private void setConntrol() {
         ortherAvata = findViewById(R.id.ortherAvata);
         fullname = findViewById(R.id.username);
-        imgsend=findViewById(R.id.imgsend);
-        imgbback=findViewById(R.id.imgback);
-        message=findViewById(R.id.message);
-        Bundle bundle=getIntent().getExtras();
-        otherID=bundle.getString("otherID");
+        imgsend = findViewById(R.id.imgsend);
+        imgbback = findViewById(R.id.imgback);
+        message = findViewById(R.id.message);
+        Bundle bundle = getIntent().getExtras();
+        otherID = bundle.getString("otherID");
         Log.d("otherID:", otherID);
-        Toast.makeText(this, otherID, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, otherID, Toast.LENGTH_SHORT).show();
         String userID = bundle.getString("userID");
         Log.d(TAG, String.valueOf(userID));
 
-//        fullname.setText(full);
-//        Picasso.get()
-//                .load(avata)
-//                .into(ortherAvata);
+        Database = FirebaseDatabase.getInstance();
+        mDatabase = Database.getReference("User");
+        Query check = mDatabase.orderByChild("id").equalTo(otherID);
+        check.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    if (ds.exists()) {
+                        String fist = ds.child("fist").getValue(String.class);
+                        String last = ds.child("last").getValue(String.class);
+                        String full= fist+" "+last;
+                        fullname.setText(full);
+                        String img = ds.child("pic").getValue(String.class);
+                        Picasso.get().load(img).into(ortherAvata);
+
+                    } else {
+                        Log.d("user", "khong ton tai");
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
 }

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -181,16 +182,30 @@ public class registration extends AppCompatActivity {
                 }
             }
         });
-
+        cpass.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    // Perform action on key press
+                    bien();
+                    progressBar.setVisibility(View.VISIBLE);
+                    register(Email, Pass);
+                    return true;
+                }
+                return false;
+            }
+        });
         btnregister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bien();
                 progressBar.setVisibility(View.VISIBLE);
                 register(Email, Pass);
-                Login.isLogin=true;
+
             }
         });
+
         link_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -28,23 +28,12 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "test";
-    // khai bao
-    Button btnlogout;
-    FirebaseAuth fAuth;
-    UserAdapter userAdapter;
-    User user;
-    ListView listView;
-    ArrayList<User> listuser = new ArrayList<>();
-    FirebaseDatabase Database;
-    DatabaseReference mDatabase;
-    String currentuser = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         setControl();
         setEnvet();
     }
@@ -55,17 +44,17 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setControl() {
-        Handler handler=new Handler();
+        Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (Login.isLogin == true) {
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     startActivity(new Intent(getApplicationContext(), home.class));
                 } else {
                     startActivity(new Intent(getApplicationContext(), Login.class));
                 }
             }
-        },4000);
+        }, 3500);
 
 
     }

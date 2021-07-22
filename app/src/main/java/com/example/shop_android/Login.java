@@ -37,7 +37,7 @@ public class Login extends AppCompatActivity {
     Button btnlogin;
     FirebaseAuth fAuth;
     ProgressBar progressBar;
-    public static boolean isLogin = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,7 +141,7 @@ public class Login extends AppCompatActivity {
             if (task.isSuccessful()) {
                 startActivity(new Intent(getApplicationContext(), home.class));
                 progressBar.setVisibility(View.VISIBLE);
-                isLogin=true;
+
             } else {
                 Toast.makeText(getApplicationContext(),
                         "Please Check Your login Credentials",
@@ -183,9 +183,7 @@ public class Login extends AppCompatActivity {
     }
 
     private void setContol() {
-        if(isLogin==true){
-            startActivity(new Intent(getApplicationContext(),home.class));
-        }
+
         email = findViewById(R.id.lemail);
         pass = findViewById(R.id.lpass);
         progressBar = findViewById(R.id.progressBar);
