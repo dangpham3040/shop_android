@@ -4,14 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".profile"
-    android:orientation="vertical">
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".profile">
+
+    <include
+        android:id="@+id/profilebar"
+        layout="@layout/app_profile_bar" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="203dp"
+        android:layout_height="147dp"
         android:layout_marginTop="50dp"
+        android:src="@drawable/user"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +43,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="50dp"
@@ -46,28 +53,18 @@
                 android:src="@drawable/username" />
 
             <EditText
-                android:enabled="false"
                 android:id="@+id/fist"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/fist" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="50dp"
+                android:layout_width="145dp"
                 android:layout_height="50dp"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/username" />
+                android:layout_marginRight="20dp"
+                android:enabled="false"
+                android:hint="@string/fist" />
 
             <EditText
-                android:enabled="false"
                 android:id="@+id/last"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="145dp"
+                android:layout_height="50dp"
+                android:enabled="false"
                 android:hint="@string/last" />
         </LinearLayout>
 
@@ -82,16 +79,13 @@
                 android:src="@drawable/email" />
 
             <EditText
-                android:enabled="false"
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:enabled="false"
 
                 android:hint="@string/email" />
         </LinearLayout>
-
-
-
 
 
         <LinearLayout
@@ -108,14 +102,28 @@
                 android:layout_marginRight="10dp"
                 android:src="@drawable/sex" />
 
-            <EditText
-                android:id="@+id/sex"
+            <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:enabled="false"
-               />
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:text="@string/male" />
+
+                <RadioButton
+                    android:id="@+id/female"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:text="@string/female" />
+            </RadioGroup>
+
         </LinearLayout>
+
     </LinearLayout>
 
 

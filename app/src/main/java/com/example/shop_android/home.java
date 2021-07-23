@@ -58,21 +58,21 @@ public class home extends AppCompatActivity {
                 finish();
             }
         });
-      listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-          @Override
-          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-              User user = listuser.get(position);
-              String full = user.getFist() + " " + user.getLast();
-              Log.d(TAG, full);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                User user = listuser.get(position);
+                String full = user.getFist() + " " + user.getLast();
+                Log.d(TAG, full);
 
-              Intent intent = new Intent(home.this, chat.class);
-              Bundle bundle=new Bundle();
-              bundle.putString("otherID", user.getId().toString());
-              bundle.putString("userID", currentuser);
-              intent.putExtras(bundle);
-              startActivity(intent);
-          }
-      });
+                Intent intent = new Intent(home.this, chat.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("otherID", user.getId().toString());
+                bundle.putString("userID", currentuser);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -80,9 +80,9 @@ public class home extends AppCompatActivity {
         btnlogout = findViewById(R.id.logout);
         listView = findViewById(R.id.list);
         userAdapter = new UserAdapter(getApplicationContext(), R.layout.list, listuser);
-
         Database = FirebaseDatabase.getInstance();
         mDatabase = Database.getReference("User");
+        listuser.removeAll(listuser);
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
