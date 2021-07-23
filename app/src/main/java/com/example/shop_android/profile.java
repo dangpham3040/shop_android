@@ -6,16 +6,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +35,8 @@ import com.squareup.picasso.Picasso;
 public class profile extends AppCompatActivity {
     ImageView profileimg;
     EditText fist, last, email;
-    RadioButton male,female;
+    RadioGroup radioGroup;
+    RadioButton male, female;
     FirebaseDatabase Database;
     DatabaseReference mDatabase;
     FirebaseAuth fAuth;
@@ -41,6 +45,13 @@ public class profile extends AppCompatActivity {
     String Fist, Last, Email;
     String otherID;
     String currentuser;
+    boolean isfist = false;
+    boolean islast = false;
+    boolean isemail = false;
+    boolean issex = false;
+
+    String nam = "Nam", nu = "Nữ";
+    String fistname = "", lastname = "", emailuser = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,12 +87,19 @@ public class profile extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(iscurrentuser()==true){
-                    if (Fist.equals( fist.getText().toString())) {
-
-                    } else {
-                        save.setEnabled(true);
-                        save.setTextColor(Color.parseColor("#FFFFFF"));
+                if (iscurrentuser() == true) {
+                    fistname = fist.getText().toString();
+                    if (fistname.isEmpty()) {
+                        fist.setError("fistname is require!!");
+                        isfist = false;
+                        checUpdate();
+                    }
+                    if (Fist.equals(fistname)) {
+                        isfist = false;
+                        checUpdate();
+                    } else if (!Fist.equals(fistname) && !fistname.isEmpty()) {
+                        isfist = true;
+                        checUpdate();
                     }
                 }
 
@@ -100,11 +118,19 @@ public class profile extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (iscurrentuser()==true){
-                    if (Last.equals( last.getText().toString())) {
-                    } else {
-                        save.setEnabled(true);
-                        save.setTextColor(Color.parseColor("#FFFFFF"));
+                if (iscurrentuser() == true) {
+                    lastname = last.getText().toString();
+                    if (lastname.isEmpty()) {
+                        last.setError("lastname is require!!");
+                        islast = false;
+                        checUpdate();
+                    }
+                    if (Last.equals(lastname)) {
+                        islast = false;
+                        checUpdate();
+                    } else if (!Last.equals(lastname) && !Last.isEmpty()) {
+                        islast = true;
+                        checUpdate();
                     }
                 }
 
@@ -123,16 +149,66 @@ public class profile extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(iscurrentuser()==true){
-                    if (Email.equals( fist.getText().toString())) {
-                    } else {
-                        save.setEnabled(true);
-                        save.setTextColor(Color.parseColor("#FFFFFF"));
+                if (iscurrentuser() == true) {
+                    emailuser = email.getText().toString();
+                    if (emailuser.isEmpty()) {
+                        isemail = false;
+                        checUpdate();
+                        email.setError("email is require!!");
+                    }
+                    if (Email.equals(emailuser)) {
+                        isemail = false;
+                        checUpdate();
+                    }
+                    if (!Email.equals(emailuser) && !Email.isEmpty()) {
+                        isemail = true;
+                        checUpdate();
+                    }
+                    if (!Patterns.EMAIL_ADDRESS.matcher(emailuser).matches()) {
+                        email.setError("Enter Valid Email Address");
+                        isemail = false;
+                        checUpdate();
                     }
                 }
 
             }
         });
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                String choose_sex = "";
+                if (male.isChecked()) {
+                    choose_sex = nam;
+                }
+                if (female.isChecked()) {
+                    choose_sex = nu;
+                }
+                if (!gioitinh.equals(choose_sex)) {
+                    issex = true;
+                    checUpdate();
+                } else {
+                    issex = false;
+                    checUpdate();
+                }
+            }
+        });
+
+
+    }
+
+    private void checUpdate() {
+        if (!fistname.isEmpty() && !lastname.isEmpty() && !emailuser.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(emailuser).matches()) {
+            if (isfist == true || islast == true || isemail == true || issex == true) {
+                save.setEnabled(true);
+                save.setTextColor(Color.parseColor("#FFFFFF"));
+            } else {
+                save.setTextColor(Color.parseColor("#5500ce"));
+                save.setEnabled(false);
+            }
+        } else {
+            save.setTextColor(Color.parseColor("#5500ce"));
+            save.setEnabled(false);
+        }
 
 
     }
@@ -141,11 +217,17 @@ public class profile extends AppCompatActivity {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
         b.setTitle("Update?");
         b.setMessage("Are you sure ?");
-        b.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        b.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 mDatabase.child(otherID).child("fist").setValue(fist.getText().toString());
                 mDatabase.child(otherID).child("last").setValue(last.getText().toString());
                 mDatabase.child(otherID).child("email").setValue(email.getText().toString());
+                if (male.isChecked()) {
+                    mDatabase.child(otherID).child("sex").setValue(nam);
+                }
+                if (female.isChecked()) {
+                    mDatabase.child(otherID).child("sex").setValue(nu);
+                }
                 startActivity(new Intent(getApplicationContext(), home.class));
             }
         });
@@ -169,10 +251,11 @@ public class profile extends AppCompatActivity {
         fist = findViewById(R.id.fist);
         last = findViewById(R.id.last);
         email = findViewById(R.id.email);
-        male=findViewById(R.id.male);
-        female=findViewById(R.id.female);
+        male = findViewById(R.id.male);
+        female = findViewById(R.id.female);
         cancel = findViewById(R.id.cancel);
         save = findViewById(R.id.save);
+        radioGroup = findViewById(R.id.RadioGroup);
 
         Intent intent = getIntent();
         currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -192,13 +275,11 @@ public class profile extends AppCompatActivity {
                         last.setText(Last);
                         Email = ds.child("email").getValue(String.class);
                         email.setText(Email);
-                        gioitinh=ds.child("sex").getValue(String.class);
-                        String nam= "Nam";
-                        if(gioitinh.equals(nam))
-                        {
+                        gioitinh = ds.child("sex").getValue(String.class);
+
+                        if (gioitinh.equals(nam)) {
                             male.setChecked(true);
-                        }
-                        else{
+                        } else {
                             female.setChecked(true);
                         }
                         String img = ds.child("pic").getValue(String.class);
@@ -216,14 +297,13 @@ public class profile extends AppCompatActivity {
 
             }
         });
-       if(iscurrentuser()==true)
-       {
-           fist.setEnabled(true);
-           last.setEnabled(true);
-           email.setEnabled(true);
-           female.setEnabled(true);
-           male.setEnabled(true);
-       }
+        if (iscurrentuser() == true) {
+            fist.setEnabled(true);
+            last.setEnabled(true);
+            email.setEnabled(true);
+            female.setEnabled(true);
+            male.setEnabled(true);
+        }
     }
 
     private boolean iscurrentuser() {
