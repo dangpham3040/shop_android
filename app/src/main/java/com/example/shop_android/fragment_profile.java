@@ -1,18 +1,22 @@
 package com.example.shop_android;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -28,11 +32,26 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-public class profile extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link fragment_profile#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class fragment_profile extends Fragment {
+
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
     ImageView profileimg;
     EditText fist, last, email;
     RadioGroup radioGroup;
     RadioButton male, female;
+    Button btnlogout;
     FirebaseDatabase Database;
     DatabaseReference mDatabase;
     FirebaseAuth fAuth;
@@ -48,20 +67,53 @@ public class profile extends AppCompatActivity {
 
     String nam = "Nam", nu = "Nữ";
     String fistname = "", lastname = "", emailuser = "";
+    View view;
+
+    public fragment_profile() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment Fragment_profile.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static fragment_profile newInstance(String param1, String param2) {
+        fragment_profile fragment = new fragment_profile();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
-        setControl();
-        setEnvet();
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+
     }
 
     private void setEnvet() {
+        btnlogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), Login.class));
+                fAuth.getInstance().signOut();
+            }
+        });
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+
+                startActivity(new Intent(getContext(), starup.class));
             }
         });
         save.setOnClickListener(new View.OnClickListener() {
@@ -210,7 +262,7 @@ public class profile extends AppCompatActivity {
     }
 
     private void Update() {
-        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        AlertDialog.Builder b = new AlertDialog.Builder(getContext());
         b.setTitle("Update?");
         b.setMessage("Are you sure ?");
         b.setPositiveButton("yes", new DialogInterface.OnClickListener() {
@@ -224,7 +276,7 @@ public class profile extends AppCompatActivity {
                 if (female.isChecked()) {
                     mDatabase.child(otherID).child("sex").setValue(nu);
                 }
-                startActivity(new Intent(getApplicationContext(), starup.class));
+                startActivity(new Intent(getContext(), starup.class));
             }
         });
         b.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -243,19 +295,20 @@ public class profile extends AppCompatActivity {
 
 
     private void setControl() {
-        profileimg = findViewById(R.id.imageView);
-        fist = findViewById(R.id.fist);
-        last = findViewById(R.id.last);
-        email = findViewById(R.id.email);
-        male = findViewById(R.id.male);
-        female = findViewById(R.id.female);
-        cancel = findViewById(R.id.cancel);
-        save = findViewById(R.id.save);
-        radioGroup = findViewById(R.id.RadioGroup);
+        profileimg = view.findViewById(R.id.imageView);
+        fist = view.findViewById(R.id.fist);
+        last = view.findViewById(R.id.last);
+        email = view.findViewById(R.id.email);
+        male = view.findViewById(R.id.male);
+        female = view.findViewById(R.id.female);
+        cancel = view.findViewById(R.id.cancel);
+        save = view.findViewById(R.id.save);
+        radioGroup = view.findViewById(R.id.RadioGroup);
+        btnlogout=view.findViewById(R.id.btnlogout);
 
-        Intent intent = getIntent();
+//        Intent intent = getIntent();
         currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        otherID = intent.getStringExtra("otherID");
+        otherID =currentuser;
         Database = FirebaseDatabase.getInstance();
         mDatabase = Database.getReference("User");
         Query check = mDatabase.orderByChild("id").equalTo(otherID);
@@ -309,4 +362,14 @@ public class profile extends AppCompatActivity {
         return false;
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.activity_profile,container,false);
+        // Inflate the layout for this fragment
+        setControl();
+        setEnvet();
+        return view;
+
+    }
 }

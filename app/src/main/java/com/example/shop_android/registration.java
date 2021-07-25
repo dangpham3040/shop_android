@@ -11,11 +11,8 @@ import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,13 +22,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
 
 import java.net.URI;
-import java.util.ArrayList;
 
 
 public class registration extends AppCompatActivity {
@@ -285,7 +279,7 @@ public class registration extends AppCompatActivity {
         user = new User(keyid,fistname,lastname,Email,gioitinh,Pass,anh);
         mDatabase.child(keyid).setValue(user);
 
-        Intent intent = new Intent(getApplicationContext(), home.class);
+        Intent intent = new Intent(getApplicationContext(), starup.class);
         startActivity(intent);
     }
 

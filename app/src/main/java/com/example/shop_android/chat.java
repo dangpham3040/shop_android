@@ -27,7 +27,7 @@ public class chat extends AppCompatActivity {
     ImageView ortherAvata, imgsend, imgbback;
     TextView fullname;
     EditText message;
-    String otherID;
+    public String otherID="";
     FirebaseDatabase Database;
     DatabaseReference mDatabase;
 
@@ -40,6 +40,14 @@ public class chat extends AppCompatActivity {
     }
 
     private void setEnvent() {
+        fullname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), profile.class);
+                intent.putExtra("otherID", otherID);
+                startActivity(intent);
+            }
+        });
         imgbback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
