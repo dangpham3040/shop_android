@@ -195,6 +195,7 @@ public class profile extends AppCompatActivity {
     private void checUpdate() {
         if (!fistname.isEmpty() && !lastname.isEmpty() && !emailuser.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(emailuser).matches()) {
             if (isfist == true || islast == true || isemail == true || issex == true) {
+
                 save.setEnabled(true);
                 save.setTextColor(Color.parseColor("#FFFFFF"));
             } else {

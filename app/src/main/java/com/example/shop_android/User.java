@@ -1,16 +1,15 @@
 package com.example.shop_android;
 
 public class User {
-    String id,fist,last,email,sex,pass;
+    String id,fist,last,email,sex;
     String pic;
 
-    public User(String id, String fist, String last, String email, String sex, String pass, String pic) {
+    public User(String id, String fist, String last, String email, String sex, String pic) {
         this.id = id;
         this.fist = fist;
         this.last = last;
         this.email = email;
         this.sex = sex;
-        this.pass = pass;
         this.pic = pic;
     }
 
@@ -67,11 +66,5 @@ public class User {
         this.email = email;
     }
 
-    public String getPass() {
-        return pass;
-    }
 
-    public void setPass(String pass) {
-        this.pass = pass;
-    }
 }

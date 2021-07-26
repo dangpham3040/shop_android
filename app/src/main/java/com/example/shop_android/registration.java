@@ -276,7 +276,7 @@ public class registration extends AppCompatActivity {
 
         String keyid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        user = new User(keyid,fistname,lastname,Email,gioitinh,Pass,anh);
+        user = new User(keyid,fistname,lastname,Email,gioitinh,anh);
         mDatabase.child(keyid).setValue(user);
 
         Intent intent = new Intent(getApplicationContext(), starup.class);

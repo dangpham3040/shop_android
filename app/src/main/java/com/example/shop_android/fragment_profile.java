@@ -1,14 +1,19 @@
 package com.example.shop_android;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,14 +28,31 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.UUID;
+import java.util.zip.Inflater;
+
+import static androidx.media.MediaBrowserServiceCompat.RESULT_OK;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,22 +70,31 @@ public class fragment_profile extends Fragment {
     private String mParam1;
     private String mParam2;
     ImageView profileimg;
+    TextView save, cancel;
     EditText fist, last, email;
     RadioGroup radioGroup;
     RadioButton male, female;
     Button btnlogout;
+
+    private final int PICK_IMAGE_REQUEST = 10;
+    Uri filePath;
     FirebaseDatabase Database;
     DatabaseReference mDatabase;
     FirebaseAuth fAuth;
-    TextView save, cancel;
+    FirebaseStorage storage;
+    StorageReference storageReference;
+
     String gioitinh;
     String Fist, Last, Email;
     String otherID;
     String currentuser;
+    String link;
+
     boolean isfist = false;
     boolean islast = false;
     boolean isemail = false;
     boolean issex = false;
+    boolean isimg = false;
 
     String nam = "Nam", nu = "Nữ";
     String fistname = "", lastname = "", emailuser = "";
@@ -102,6 +133,14 @@ public class fragment_profile extends Fragment {
     }
 
     private void setEnvet() {
+        profileimg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage();
+                isimg=true;
+                checUpdate();
+            }
+        });
         btnlogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -244,9 +283,76 @@ public class fragment_profile extends Fragment {
 
     }
 
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK
+                && data != null && data.getData() != null) {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getApplicationContext().getContentResolver(), filePath);
+                profileimg.setImageBitmap(bitmap);
+                uploadImage();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void uploadImage() {
+
+        if (filePath != null) {
+            final ProgressDialog progressDialog = new ProgressDialog(getContext());
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            StorageReference ref = storageReference.child("Avatar/"+currentuser+"/" + UUID.randomUUID().toString());
+            ref.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    Log.d("downloadUrl:", "" + uri);
+                                    link = uri.toString();
+
+                                }
+                            });
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                            double progress = 100.0 * (snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
+                            progressDialog.setMessage("Upload is " + progress + "% done");
+                        }
+                    });
+        }
+    }
+
+
     private void checUpdate() {
         if (!fistname.isEmpty() && !lastname.isEmpty() && !emailuser.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(emailuser).matches()) {
-            if (isfist == true || islast == true || isemail == true || issex == true) {
+            if (isfist == true || islast == true || isemail == true || issex == true||isimg==true) {
                 save.setEnabled(true);
                 save.setTextColor(Color.parseColor("#FFFFFF"));
             } else {
@@ -270,6 +376,20 @@ public class fragment_profile extends Fragment {
                 mDatabase.child(otherID).child("fist").setValue(fist.getText().toString());
                 mDatabase.child(otherID).child("last").setValue(last.getText().toString());
                 mDatabase.child(otherID).child("email").setValue(email.getText().toString());
+                mDatabase.child(currentuser).child("pic").setValue(link);
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                user.updateEmail(email.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String TAG = "\"Update Email:\"";
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "ok");
+                        } else {
+                            Log.d(TAG, "fail");
+                        }
+                    }
+                });
                 if (male.isChecked()) {
                     mDatabase.child(otherID).child("sex").setValue(nam);
                 }
@@ -295,6 +415,7 @@ public class fragment_profile extends Fragment {
 
 
     private void setControl() {
+
         profileimg = view.findViewById(R.id.imageView);
         fist = view.findViewById(R.id.fist);
         last = view.findViewById(R.id.last);
@@ -304,11 +425,12 @@ public class fragment_profile extends Fragment {
         cancel = view.findViewById(R.id.cancel);
         save = view.findViewById(R.id.save);
         radioGroup = view.findViewById(R.id.RadioGroup);
-        btnlogout=view.findViewById(R.id.btnlogout);
+        btnlogout = view.findViewById(R.id.btnlogout);
 
-//        Intent intent = getIntent();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
         currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        otherID =currentuser;
+        otherID = currentuser;
         Database = FirebaseDatabase.getInstance();
         mDatabase = Database.getReference("User");
         Query check = mDatabase.orderByChild("id").equalTo(otherID);
@@ -325,14 +447,14 @@ public class fragment_profile extends Fragment {
                         Email = ds.child("email").getValue(String.class);
                         email.setText(Email);
                         gioitinh = ds.child("sex").getValue(String.class);
-
                         if (gioitinh.equals(nam)) {
                             male.setChecked(true);
                         } else {
                             female.setChecked(true);
                         }
-                        String img = ds.child("pic").getValue(String.class);
-                        Picasso.get().load(img).into(profileimg);
+
+                        link = ds.child("pic").getValue(String.class);
+                        Picasso.get().load(link).into(profileimg);
 
                     } else {
                         Log.d("user", "khong ton tai");
@@ -352,6 +474,7 @@ public class fragment_profile extends Fragment {
             email.setEnabled(true);
             female.setEnabled(true);
             male.setEnabled(true);
+            btnlogout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -365,8 +488,9 @@ public class fragment_profile extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_profile,container,false);
+        view = inflater.inflate(R.layout.activity_profile, container, false);
         // Inflate the layout for this fragment
+
         setControl();
         setEnvet();
         return view;

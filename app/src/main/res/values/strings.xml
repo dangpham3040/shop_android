@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">shop_android</string>
+    <string name="app_name">shop</string>
     //tác giả
     <string name="tachgia">Phạm Hải Đăng</string>
     //nút
@@ -27,6 +27,7 @@
     <string name="logout">Logout</string>
     <string name="login">Login</string>
     <string name="Contact">Contact</string>
+    <string name="forgot">forgot password?!</string>
     //text link
     <string name="text_register">"Don't have an account yet?"</string>
     <string name="text_login">Already have an account?</string>

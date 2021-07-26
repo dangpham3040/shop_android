@@ -39,7 +39,6 @@ public class fragment_contact extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_contact,container,false);
-
         setControl();
         setEvent();
         return view;
@@ -47,7 +46,6 @@ public class fragment_contact extends Fragment {
     }
 
     private void setControl() {
-
 
         listView = (ListView) view.findViewById(R.id.list);
         userAdapter = new UserAdapter(getContext(), R.layout.list, listuser);

@@ -1,6 +1,7 @@
 package com.example.shop_android;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.TooltipCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,12 +19,14 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+
 public class Login extends AppCompatActivity {
 
     //khai bao
     String Email = "";
     String Pass = "";
     EditText email, pass;
+    TextView forgot;
     TextView link_register;
     Button btnlogin;
     FirebaseAuth fAuth;
@@ -39,7 +42,9 @@ public class Login extends AppCompatActivity {
 
     }
 
+
     private void setEnvet() {
+        
         email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -123,8 +128,20 @@ public class Login extends AppCompatActivity {
                 return false;
             }
         });
+        forgot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!Email.isEmpty()) {
+                    fAuth.sendPasswordResetEmail(Email);
+                    Toast.makeText(Login.this, "please check your email", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(Login.this, "enter email to use", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
     }
+
 
     private void login() {
         bien();
@@ -174,7 +191,7 @@ public class Login extends AppCompatActivity {
     }
 
     private void setContol() {
-
+        forgot = findViewById(R.id.forgot);
         email = findViewById(R.id.lemail);
         pass = findViewById(R.id.lpass);
         progressBar = findViewById(R.id.progressBar);
@@ -182,6 +199,8 @@ public class Login extends AppCompatActivity {
         link_register = findViewById(R.id.link_register);
         fAuth = FirebaseAuth.getInstance();
     }
+
+
 
 
 }
