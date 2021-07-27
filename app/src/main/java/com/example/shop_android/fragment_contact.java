@@ -56,21 +56,21 @@ public class fragment_contact extends Fragment {
         mDatabase = Database.getReference("User");
         //lấy id của user hiện tại
         currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
+        listView.setAdapter(userAdapter);
         //load list user
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //xoá list user
+                listuser.removeAll(listuser);
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     if (!ds.child("id").getValue(String.class).equals(currentuser)) {
-                        //xoá list user
-                        listuser.removeAll(listuser);
                         user = ds.getValue(User.class);
                         listuser.add(user);
-
                     }
+                    userAdapter.notifyDataSetChanged();
                 }
-                listView.setAdapter(userAdapter);
+
 
             }
 

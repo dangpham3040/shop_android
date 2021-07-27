@@ -34,10 +34,7 @@ public class starup extends AppCompatActivity {
 
         Database = FirebaseDatabase.getInstance();
         mDatabase = Database.getReference("User");
-        //lấy id của user hiện tại
-//        currentuser = fAuth.getInstance().getCurrentUser().getUid();
-//        //cập nhập tình trạng online
-//        mDatabase.child(currentuser).child("status").setValue("online");
+
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom);
         navigation = Navigation.findNavController(this, R.id.fragment);

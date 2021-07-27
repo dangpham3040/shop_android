@@ -318,7 +318,7 @@ public class profile extends AppCompatActivity {
 
     private void isOnline() {
         if (status.equals("online")) {
-            profileimg.setBorderColor(Color.GREEN);
+            profileimg.setBorderColor(Color.BLUE);
         }
         if (status.equals("offline")) {
             profileimg.setBorderColor(Color.GRAY);

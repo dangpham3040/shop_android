@@ -32,6 +32,7 @@ public class Login extends AppCompatActivity {
     private TextView link_register;
     private Button btnlogin;
     private ProgressBar progressBar;
+    private String status="offline";
     //bien
 
 

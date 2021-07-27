@@ -125,7 +125,7 @@ public class chat extends AppCompatActivity {
     private void isOnline() {
         if (status.equals("online")) {
             tvstatus.setTextColor(Color.parseColor("#21ED0A"));
-            ortherAvata.setBorderColor(Color.GREEN);
+            ortherAvata.setBorderColor(Color.BLUE);
         }
         if (status.equals("offline")) {
             tvstatus.setTextColor(Color.parseColor("#5500ce"));
