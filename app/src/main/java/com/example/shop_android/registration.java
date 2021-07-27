@@ -30,23 +30,22 @@ import java.net.URI;
 
 public class registration extends AppCompatActivity {
     // khai bao
-    EditText fist, last, email, pass, cpass;
-    Button btnregister;
-    TextView link_login;
-    ProgressBar progressBar;
-    Spinner sex;
+    private EditText fist, last, email, pass, cpass;
+    private Button btnregister;
+    private TextView link_login;
+    private ProgressBar progressBar;
+    private Spinner sex;
 
-    String fistname = "";
-    String lastname = "";
-    String Email = "";
-    String Pass = "";
-    String Cpass = "";
-    String anh = "";
-    String gioitinh = "Nam";
-    String id;
-    User user;
-    private static final int PICK_IMAGE_REQUIRE = 1;
-    private URI imageUri;
+    //bien
+    private String fistname = "";
+    private  String lastname = "";
+    private String Email = "";
+    private String Pass = "";
+    private  String Cpass = "";
+    private  String anh = "";
+    private  String gioitinh = "Nam";
+    private User user;
+    //firebase
     FirebaseAuth fAuth;
     FirebaseDatabase Database;
     DatabaseReference mDatabase;
@@ -203,7 +202,7 @@ public class registration extends AppCompatActivity {
         link_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),Login.class));
+                startActivity(new Intent(getApplicationContext(), Login.class));
             }
         });
     }
@@ -276,7 +275,7 @@ public class registration extends AppCompatActivity {
 
         String keyid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        user = new User(keyid,fistname,lastname,Email,gioitinh,anh);
+        user = new User(keyid, fistname, lastname, Email, gioitinh, anh);
         mDatabase.child(keyid).setValue(user);
 
         Intent intent = new Intent(getApplicationContext(), starup.class);
@@ -295,6 +294,7 @@ public class registration extends AppCompatActivity {
         Email = email.getText().toString();
         Pass = pass.getText().toString();
         Cpass = cpass.getText().toString();
+        //ảnh mặc định
         anh = "https://firebasestorage.googleapis.com/v0/b/android-shop-ae9d2.appspot.com/o/Image%2Fuser.jpg?alt=media&token=710dd3aa-8bb1-4048-bb0f-13320ad94825";
 
     }
@@ -306,7 +306,7 @@ public class registration extends AppCompatActivity {
         pass = findViewById(R.id.pass);
         cpass = findViewById(R.id.cpass);
         sex = findViewById(R.id.spsex);
-        link_login=findViewById(R.id.link_login);
+        link_login = findViewById(R.id.link_login);
         btnregister = findViewById(R.id.btnregister);
         progressBar = findViewById(R.id.progressBar);
         fAuth = FirebaseAuth.getInstance();

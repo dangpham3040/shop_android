@@ -18,19 +18,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class Login extends AppCompatActivity {
 
     //khai bao
-    String Email = "";
-    String Pass = "";
-    EditText email, pass;
-    TextView forgot;
-    TextView link_register;
-    Button btnlogin;
-    FirebaseAuth fAuth;
-    ProgressBar progressBar;
+    private String Email = "";
+    private String Pass = "";
+    private EditText email, pass;
+    private TextView forgot;
+    private TextView link_register;
+    private Button btnlogin;
+    private ProgressBar progressBar;
+    //bien
+
+
+    //firebase
+    private FirebaseAuth fAuth;
+    private FirebaseDatabase Database;
+    private DatabaseReference mDatabase;
+
 
 
     @Override
@@ -44,7 +53,7 @@ public class Login extends AppCompatActivity {
 
 
     private void setEnvet() {
-        
+
         email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -145,10 +154,16 @@ public class Login extends AppCompatActivity {
 
     private void login() {
         bien();
+
         fAuth.signInWithEmailAndPassword(Email, Pass).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 startActivity(new Intent(getApplicationContext(), starup.class));
                 progressBar.setVisibility(View.VISIBLE);
+                //lấy id của user hiện tại
+                Database = FirebaseDatabase.getInstance();
+                mDatabase = Database.getReference("User");
+                String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                mDatabase.child(currentuser).child("status").setValue("online");
 
             } else {
                 Toast.makeText(getApplicationContext(),
@@ -199,8 +214,6 @@ public class Login extends AppCompatActivity {
         link_register = findViewById(R.id.link_register);
         fAuth = FirebaseAuth.getInstance();
     }
-
-
 
 
 }

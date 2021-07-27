@@ -26,28 +26,34 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 public class profile extends AppCompatActivity {
-    ImageView profileimg;
-    EditText fist, last, email;
-    RadioGroup radioGroup;
-    RadioButton male, female;
-    FirebaseDatabase Database;
-    DatabaseReference mDatabase;
-    FirebaseAuth fAuth;
     TextView save, cancel;
-    String gioitinh;
-    String Fist, Last, Email;
-    String otherID;
-    String currentuser;
-    boolean isfist = false;
-    boolean islast = false;
-    boolean isemail = false;
-    boolean issex = false;
+    private CircularImageView profileimg;
+    private EditText fist, last, email;
+    private RadioGroup radioGroup;
+    private RadioButton male, female;
+    //firebase
+    private FirebaseDatabase Database;
+    private DatabaseReference mDatabase;
+    private FirebaseAuth fAuth;
+    //bien
+    private String gioitinh;
+    private String Fist, Last, Email;
+    private String otherID;
+    private String currentuser;
+    private String nam = "Nam", nu = "Nữ";
+    private String link;
+    private String status;
+    private String fistname = "", lastname = "", emailuser = "";
+    //kiêm tra
+    private boolean isfist = false;
+    private boolean islast = false;
+    private boolean isemail = false;
+    private boolean issex = false;
 
-    String nam = "Nam", nu = "Nữ";
-    String fistname = "", lastname = "", emailuser = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -279,8 +285,15 @@ public class profile extends AppCompatActivity {
                         } else {
                             female.setChecked(true);
                         }
-                        String img = ds.child("pic").getValue(String.class);
-                        Picasso.get().load(img).into(profileimg);
+                        link = ds.child("pic").getValue(String.class);
+                         status = ds.child("status").getValue(String.class);
+                        Picasso.get()
+                                .load(link)
+                                .fit()
+//                                .transform(transformation)
+                                .into(profileimg);
+                        isOnline();
+
 
                     } else {
                         Log.d("user", "khong ton tai");
@@ -300,6 +313,15 @@ public class profile extends AppCompatActivity {
             email.setEnabled(true);
             female.setEnabled(true);
             male.setEnabled(true);
+        }
+    }
+
+    private void isOnline() {
+        if (status.equals("online")) {
+            profileimg.setBorderColor(Color.GREEN);
+        }
+        if (status.equals("offline")) {
+            profileimg.setBorderColor(Color.GRAY);
         }
     }
 

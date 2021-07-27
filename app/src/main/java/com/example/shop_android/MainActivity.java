@@ -25,10 +25,12 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setControl() {
+        //màn hình loading....
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                //kiểm tra coi đã login chưa
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     startActivity(new Intent(getApplicationContext(), starup.class));
                 } else {

@@ -44,7 +44,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.io.IOException;
 import java.net.URI;
@@ -69,35 +72,38 @@ public class fragment_profile extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    ImageView profileimg;
-    TextView save, cancel;
-    EditText fist, last, email;
-    RadioGroup radioGroup;
-    RadioButton male, female;
-    Button btnlogout;
+    //khai bao
+    private CircularImageView profileimg;
+    private TextView save, cancel;
+    private EditText fist, last, email;
+    private RadioGroup radioGroup;
+    private RadioButton male, female;
+    private Button btnlogout;
 
+    //Firebase
     private final int PICK_IMAGE_REQUEST = 10;
-    Uri filePath;
-    FirebaseDatabase Database;
-    DatabaseReference mDatabase;
-    FirebaseAuth fAuth;
-    FirebaseStorage storage;
-    StorageReference storageReference;
+    private Uri filePath;
+    private FirebaseDatabase Database;
+    private DatabaseReference mDatabase;
+    private FirebaseAuth fAuth;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
+    //bien
+    private String gioitinh;
+    private String Fist, Last, Email;
+    private String otherID;
+    private String currentuser;
+    private String link;
+    private String nam = "Nam", nu = "Nữ";
+    private String fistname = "", lastname = "", emailuser = "";
+    // dành để kiểm tra sự thay đổi
+    private boolean isfist = false;
+    private boolean islast = false;
+    private boolean isemail = false;
+    private boolean issex = false;
+    private boolean isimg = false;
 
-    String gioitinh;
-    String Fist, Last, Email;
-    String otherID;
-    String currentuser;
-    String link;
 
-    boolean isfist = false;
-    boolean islast = false;
-    boolean isemail = false;
-    boolean issex = false;
-    boolean isimg = false;
-
-    String nam = "Nam", nu = "Nữ";
-    String fistname = "", lastname = "", emailuser = "";
     View view;
 
     public fragment_profile() {
@@ -137,7 +143,7 @@ public class fragment_profile extends Fragment {
             @Override
             public void onClick(View v) {
                 chooseImage();
-                isimg=true;
+                isimg = true;
                 checUpdate();
             }
         });
@@ -145,6 +151,8 @@ public class fragment_profile extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), Login.class));
+                mDatabase.child(currentuser).child("status").setValue("offline");
+                //firebase logout
                 fAuth.getInstance().signOut();
             }
         });
@@ -161,6 +169,7 @@ public class fragment_profile extends Fragment {
                 Update();
             }
         });
+        //khi dang thay đổi edittext
         fist.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -176,11 +185,13 @@ public class fragment_profile extends Fragment {
             public void afterTextChanged(Editable s) {
                 if (iscurrentuser() == true) {
                     fistname = fist.getText().toString();
+                    //check if fistname is null
                     if (fistname.isEmpty()) {
                         fist.setError("fistname is require!!");
                         isfist = false;
                         checUpdate();
                     }
+                    //check fist name is = fistname edittext
                     if (Fist.equals(fistname)) {
                         isfist = false;
                         checUpdate();
@@ -260,6 +271,7 @@ public class fragment_profile extends Fragment {
 
             }
         });
+        //khi nhấp vào radio
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -283,6 +295,7 @@ public class fragment_profile extends Fragment {
 
     }
 
+    //mở hình
     private void chooseImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -290,7 +303,7 @@ public class fragment_profile extends Fragment {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
-
+    //gán dữ liệu vào filePath
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -298,8 +311,10 @@ public class fragment_profile extends Fragment {
                 && data != null && data.getData() != null) {
             filePath = data.getData();
             try {
+                //thay đổi hình
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getApplicationContext().getContentResolver(), filePath);
                 profileimg.setImageBitmap(bitmap);
+                //up hình lên firebase
                 uploadImage();
 
             } catch (IOException e) {
@@ -308,6 +323,7 @@ public class fragment_profile extends Fragment {
         }
     }
 
+    //Up hình lên firebase
     private void uploadImage() {
 
         if (filePath != null) {
@@ -315,7 +331,7 @@ public class fragment_profile extends Fragment {
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
 
-            StorageReference ref = storageReference.child("Avatar/"+currentuser+"/" + UUID.randomUUID().toString());
+            StorageReference ref = storageReference.child("Avatar/" + currentuser + "/" + UUID.randomUUID().toString());
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -324,9 +340,9 @@ public class fragment_profile extends Fragment {
                             ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
+                                    //lấy link đã up lên firebase
                                     Log.d("downloadUrl:", "" + uri);
                                     link = uri.toString();
-
                                 }
                             });
 
@@ -349,10 +365,10 @@ public class fragment_profile extends Fragment {
         }
     }
 
-
+    //kiểm tra người dùng khi thay đổi dữ liệu
     private void checUpdate() {
         if (!fistname.isEmpty() && !lastname.isEmpty() && !emailuser.isEmpty() && Patterns.EMAIL_ADDRESS.matcher(emailuser).matches()) {
-            if (isfist == true || islast == true || isemail == true || issex == true||isimg==true) {
+            if (isfist == true || islast == true || isemail == true || issex == true || isimg == true) {
                 save.setEnabled(true);
                 save.setTextColor(Color.parseColor("#FFFFFF"));
             } else {
@@ -367,12 +383,14 @@ public class fragment_profile extends Fragment {
 
     }
 
+    //kiểm tra trước khi thực hiện thay đổi
     private void Update() {
         AlertDialog.Builder b = new AlertDialog.Builder(getContext());
         b.setTitle("Update?");
         b.setMessage("Are you sure ?");
         b.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                ///gán dữ liệu vào firebase
                 mDatabase.child(otherID).child("fist").setValue(fist.getText().toString());
                 mDatabase.child(otherID).child("last").setValue(last.getText().toString());
                 mDatabase.child(otherID).child("email").setValue(email.getText().toString());
@@ -431,6 +449,7 @@ public class fragment_profile extends Fragment {
         storageReference = storage.getReference();
         currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
         otherID = currentuser;
+        //load dữ liệu của user hiện tại
         Database = FirebaseDatabase.getInstance();
         mDatabase = Database.getReference("User");
         Query check = mDatabase.orderByChild("id").equalTo(otherID);
@@ -452,9 +471,16 @@ public class fragment_profile extends Fragment {
                         } else {
                             female.setChecked(true);
                         }
-
                         link = ds.child("pic").getValue(String.class);
-                        Picasso.get().load(link).into(profileimg);
+                        //gán link vào imgview
+
+                        Picasso.get()
+                                .load(link)
+                                .fit()
+//                                .transform(transformation)
+                                .into(profileimg);
+                        profileimg.setBorderColor(Color.BLUE);
+
 
                     } else {
                         Log.d("user", "khong ton tai");
@@ -478,6 +504,7 @@ public class fragment_profile extends Fragment {
         }
     }
 
+    //kiểm tra xem có đúng là user hiện tại không
     private boolean iscurrentuser() {
         if (otherID.equals(currentuser)) {
             return true;

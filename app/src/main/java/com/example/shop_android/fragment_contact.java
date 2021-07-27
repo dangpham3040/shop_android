@@ -25,20 +25,22 @@ import java.util.ArrayList;
 public class fragment_contact extends Fragment {
     private static final String TAG = "test";
     // khai bao
-
-    FirebaseAuth fAuth;
-    UserAdapter userAdapter;
-    User user;
-    ListView listView;
-    ArrayList<User> listuser = new ArrayList<>();
-    FirebaseDatabase Database;
-    DatabaseReference mDatabase;
-    String currentuser;
+    private UserAdapter userAdapter;
+    private User user;
+    private ListView listView;
+    //arraylist user
+    private ArrayList<User> listuser = new ArrayList<>();
+    //Firebase
+    private FirebaseDatabase Database;
+    private DatabaseReference mDatabase;
+    //bien
+    private String currentuser = "";
     View view;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_contact,container,false);
+        view = inflater.inflate(R.layout.activity_contact, container, false);
         setControl();
         setEvent();
         return view;
@@ -49,20 +51,26 @@ public class fragment_contact extends Fragment {
 
         listView = (ListView) view.findViewById(R.id.list);
         userAdapter = new UserAdapter(getContext(), R.layout.list, listuser);
+
         Database = FirebaseDatabase.getInstance();
         mDatabase = Database.getReference("User");
+        //lấy id của user hiện tại
         currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        listuser.removeAll(listuser);
+
+        //load list user
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     if (!ds.child("id").getValue(String.class).equals(currentuser)) {
+                        //xoá list user
+                        listuser.removeAll(listuser);
                         user = ds.getValue(User.class);
                         listuser.add(user);
-                        listView.setAdapter(userAdapter);
+
                     }
                 }
+                listView.setAdapter(userAdapter);
 
             }
 
@@ -74,15 +82,16 @@ public class fragment_contact extends Fragment {
 
 
     }
-    private void setEvent(){
 
+    private void setEvent() {
+        //ấn vào item danh sách
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 User user = listuser.get(position);
                 String full = user.getFist() + " " + user.getLast();
                 Log.d(TAG, full);
-
+                //gửi other ID truyền qua chat
                 Intent intent = new Intent(getContext(), chat.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("otherID", user.getId().toString());

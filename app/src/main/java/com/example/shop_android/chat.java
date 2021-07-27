@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,16 +21,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 public class chat extends AppCompatActivity {
+    //activity
+    private ImageView imgsend, imgbback;
+    private CircularImageView ortherAvata;
+    private TextView fullname, tvstatus;
+    private EditText message;
+    //bien
     private static final String TAG = "currentuser:";
-    ImageView ortherAvata, imgsend, imgbback;
-    TextView fullname;
-    EditText message;
-    public String otherID="";
-    FirebaseDatabase Database;
-    DatabaseReference mDatabase;
+    public String otherID = "";
+    private String fist, last, full, status;
+    //Firebase
+    private FirebaseDatabase Database;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +77,9 @@ public class chat extends AppCompatActivity {
         imgsend = findViewById(R.id.imgsend);
         imgbback = findViewById(R.id.imgback);
         message = findViewById(R.id.message);
+        tvstatus = findViewById(R.id.status);
+
+        //Lấy otherID
         Bundle bundle = getIntent().getExtras();
         otherID = bundle.getString("otherID");
         Log.d("otherID:", otherID);
@@ -77,6 +87,7 @@ public class chat extends AppCompatActivity {
         String userID = bundle.getString("userID");
         Log.d(TAG, String.valueOf(userID));
 
+        //Load danh sách user sắp xếp bằng id
         Database = FirebaseDatabase.getInstance();
         mDatabase = Database.getReference("User");
         Query check = mDatabase.orderByChild("id").equalTo(otherID);
@@ -85,10 +96,13 @@ public class chat extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     if (ds.exists()) {
-                        String fist = ds.child("fist").getValue(String.class);
-                        String last = ds.child("last").getValue(String.class);
-                        String full= fist+" "+last;
+                        fist = ds.child("fist").getValue(String.class);
+                        last = ds.child("last").getValue(String.class);
+                        status = ds.child("status").getValue(String.class);
+                        String full = fist + " " + last;
                         fullname.setText(full);
+                        tvstatus.setText(status);
+                        isOnline();
                         String img = ds.child("pic").getValue(String.class);
                         Picasso.get().load(img).into(ortherAvata);
 
@@ -106,5 +120,16 @@ public class chat extends AppCompatActivity {
         });
 
 
+    }
+
+    private void isOnline() {
+        if (status.equals("online")) {
+            tvstatus.setTextColor(Color.parseColor("#21ED0A"));
+            ortherAvata.setBorderColor(Color.GREEN);
+        }
+        if (status.equals("offline")) {
+            tvstatus.setTextColor(Color.parseColor("#5500ce"));
+            ortherAvata.setBorderColor(Color.GRAY);
+        }
     }
 }

@@ -1,7 +1,12 @@
 package com.example.shop_android;
 
 public class User {
-    String id,fist,last,email,sex;
+    String id;
+    String fist;
+    String last;
+    String email;
+    String sex;
+    String status;
     String pic;
 
     public User(String id, String fist, String last, String email, String sex, String pic) {
@@ -11,6 +16,10 @@ public class User {
         this.email = email;
         this.sex = sex;
         this.pic = pic;
+        this.status = "online";
+    }
+
+    public User() {
     }
 
     public String getId() {
@@ -21,9 +30,14 @@ public class User {
         this.id = id;
     }
 
-    public User(){
-
+    public String getStatus() {
+        return status;
     }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String getPic() {
         return pic;
     }
@@ -31,9 +45,11 @@ public class User {
     public void setPic(String pic) {
         this.pic = pic;
     }
-    public String fullname(){
-        return fist+" "+last;
+
+    public String fullname() {
+        return fist + " " + last;
     }
+
     public String getSex() {
         return sex;
     }

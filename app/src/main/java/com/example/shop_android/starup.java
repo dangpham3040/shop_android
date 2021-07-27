@@ -13,18 +13,32 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class starup extends AppCompatActivity {
-    BottomNavigationView bottomNavigationView;
-    NavController navigation;
-    NavigationView navigationView;
-    TextView cancel;
-    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+    private BottomNavigationView bottomNavigationView;
+    private NavController navigation;
+    private String currentuser;
+
+    //firebase
+    private FirebaseAuth fAuth;
+    FirebaseDatabase Database;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_up);
+
+        Database = FirebaseDatabase.getInstance();
+        mDatabase = Database.getReference("User");
+        //lấy id của user hiện tại
+//        currentuser = fAuth.getInstance().getCurrentUser().getUid();
+//        //cập nhập tình trạng online
+//        mDatabase.child(currentuser).child("status").setValue("online");
+
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom);
         navigation = Navigation.findNavController(this, R.id.fragment);
         //NavigationUI.setupWithNavController(bottomNavigationView,navigation);
@@ -48,8 +62,6 @@ public class starup extends AppCompatActivity {
                 return false;
             }
         });
-
-//        navigationView.setCheckedItem(R.id.fragment_profile);
 
 
     }
