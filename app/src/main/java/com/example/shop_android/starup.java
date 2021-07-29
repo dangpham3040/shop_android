@@ -7,9 +7,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -31,11 +34,9 @@ public class starup extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_up);
-
+//        isOnline();
         Database = FirebaseDatabase.getInstance();
         mDatabase = Database.getReference("User");
-
-
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom);
         navigation = Navigation.findNavController(this, R.id.fragment);
         //NavigationUI.setupWithNavController(bottomNavigationView,navigation);
@@ -63,6 +64,23 @@ public class starup extends AppCompatActivity {
 
     }
 
+    private void isOnline() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+            if (activeNetworkInfo != null) { // connected to the internet
+                // connected to the mobile provider's data plan
+                if (activeNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                    // connected to wifi
+                    Toast.makeText(this, "online", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "offline", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
     private void loadFragment(Fragment fragment) {
         // load fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -70,6 +88,9 @@ public class starup extends AppCompatActivity {
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
+
+
 
 }
 

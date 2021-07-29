@@ -272,9 +272,7 @@ public class registration extends AppCompatActivity {
 
         Database = FirebaseDatabase.getInstance();
         mDatabase = Database.getReference("User");
-
         String keyid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
         user = new User(keyid, fistname, lastname, Email, gioitinh, anh);
         mDatabase.child(keyid).setValue(user);
 

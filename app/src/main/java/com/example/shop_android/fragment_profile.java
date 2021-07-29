@@ -453,7 +453,6 @@ public class fragment_profile extends Fragment {
         Database = FirebaseDatabase.getInstance();
         mDatabase = Database.getReference("User");
         Query check = mDatabase.orderByChild("id").equalTo(otherID);
-
         check.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

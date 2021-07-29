@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,10 +34,12 @@ public class chat extends AppCompatActivity {
     //bien
     private static final String TAG = "currentuser:";
     public String otherID = "";
-    private String fist, last, full, status;
+    private String fist, last, status;
+    private String userID = "";
     //Firebase
     private FirebaseDatabase Database;
     private DatabaseReference mDatabase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,17 @@ public class chat extends AppCompatActivity {
     }
 
     private void setEnvent() {
+        imgsend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Database = FirebaseDatabase.getInstance();
+                mDatabase = Database.getReference("User");
+                //add friend
+//                String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//                mDatabase.child(currentuser).child("friends").child(otherID).child("friendsID").setValue(otherID);
+
+            }
+        });
         fullname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +72,7 @@ public class chat extends AppCompatActivity {
         imgbback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                startActivity(new Intent(getApplicationContext(),starup.class));
             }
         });
         ortherAvata.setOnClickListener(new View.OnClickListener() {
@@ -84,8 +98,9 @@ public class chat extends AppCompatActivity {
         otherID = bundle.getString("otherID");
         Log.d("otherID:", otherID);
 //        Toast.makeText(this, otherID, Toast.LENGTH_SHORT).show();
-        String userID = bundle.getString("userID");
+        userID = bundle.getString("userID");
         Log.d(TAG, String.valueOf(userID));
+
 
         //Load danh sách user sắp xếp bằng id
         Database = FirebaseDatabase.getInstance();
@@ -105,7 +120,6 @@ public class chat extends AppCompatActivity {
                         isOnline();
                         String img = ds.child("pic").getValue(String.class);
                         Picasso.get().load(img).into(ortherAvata);
-
                     } else {
                         Log.d("user", "khong ton tai");
                     }
@@ -118,7 +132,6 @@ public class chat extends AppCompatActivity {
 
             }
         });
-
 
     }
 

@@ -67,7 +67,8 @@ public class profile extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+
+                startActivity(new Intent(getApplicationContext(),starup.class));
             }
         });
         save.setOnClickListener(new View.OnClickListener() {

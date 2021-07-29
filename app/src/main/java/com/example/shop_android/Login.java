@@ -155,7 +155,6 @@ public class Login extends AppCompatActivity {
 
     private void login() {
         bien();
-
         fAuth.signInWithEmailAndPassword(Email, Pass).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 startActivity(new Intent(getApplicationContext(), starup.class));
