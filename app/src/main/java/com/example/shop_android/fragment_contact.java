@@ -1,8 +1,10 @@
 package com.example.shop_android;
 
+import android.app.Service;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.support.v4.app.INotificationSideChannel;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.common.config.GservicesValue;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,9 +25,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.ServerValue;
 
+import java.security.Provider;
+import java.security.Timestamp;
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class fragment_contact extends Fragment {
     private static final String TAG = "test";
@@ -35,8 +44,10 @@ public class fragment_contact extends Fragment {
     //arraylist user
     private ArrayList<User> listuser = new ArrayList<>();
     //Firebase
+
     private FirebaseDatabase Database;
     private DatabaseReference mDatabase;
+    private DatabaseReference fDatabase;
     //bien
     private String currentuser = "";
     private String otherID = "";
@@ -49,7 +60,6 @@ public class fragment_contact extends Fragment {
         setControl();
         setEvent();
         return view;
-
     }
 
 
@@ -84,8 +94,9 @@ public class fragment_contact extends Fragment {
                 Log.i(TAG, "loadPost:onCancelled", error.toException());
             }
         });
-
-
+        //test giờ hien tai
+//        String timeStamp = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
+//        Toast.makeText(getContext(), "Current Time Stamp: " + timeStamp, Toast.LENGTH_SHORT).show();
     }
 
     private void setEvent() {
@@ -97,56 +108,54 @@ public class fragment_contact extends Fragment {
                 String full = user.getFist() + " " + user.getLast();
                 Log.d(TAG, full);
                 otherID = user.getId().toString();
-
-                mDatabase = Database.getReference("friends_list");
+                fDatabase = Database.getReference("friendship");
                 //add friend test
-//                mDatabase.child(currentuser).child(otherID).child("friendsID").setValue(otherID);
-//                mDatabase.child(currentuser).child(otherID).child("UserID").setValue(currentuser);
-                //kiểm tra cói phải bạn không nếu là bạn sẽ vào chat không sẽ vào profile
-                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+
+//                mDatabase.child(otherID).child("id").setValue(otherID);
+//                mDatabase.child(otherID).child(currentuser).child("friendID").setValue(currentuser);
+//                fDatabase.child(currentuser).child(otherID).child("userID").setValue(currentuser);
+//                fDatabase.child(currentuser).child(otherID).child("friendID").setValue(otherID);
+
+                fDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             if (ds.exists()) {
-                                String dk1 = "";
-                                String dk2 = "";
-                                //gán giá trị friendsID vào ban để so sách
                                 if (ds.hasChild(otherID)) {
-                                    dk1 = ds.child(otherID).child("friendsID").getValue(String.class);
-                                }
-                                //Kiểm tra xem phải là bạn khôg
-                                if (ds.hasChild(currentuser)) {
-                                    if (ds.child(currentuser).child("UserID").getValue(String.class).equals(otherID) && ds.child(currentuser).child("friendsID").getValue(String.class).equals(currentuser)) {
-                                        dk2 = ds.child(currentuser).child("friendsID").getValue(String.class);
-
+                                    if (ds.child(otherID).child("userID").getValue(String.class).equals(currentuser)
+                                            && ds.child(otherID).child("friendID").getValue(String.class).equals(otherID)) {
+                                        //gửi other ID truyền qua chat
+                                        Intent intent = new Intent(getContext(), chat.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("otherID", user.getId().toString());
+                                        bundle.putString("userID", currentuser);
+                                        intent.putExtras(bundle);
+                                        startActivity(intent);
                                     }
-                                }
+                                    else {
+                                        Intent intent = new Intent(getContext(), profile.class);
+                                        intent.putExtra("otherID", otherID);
+                                        startActivity(intent);
+                                    }
 
-                                //coi xem có trong danh sách bạn không
-                                if (dk1.equals(otherID) || dk2.equals(currentuser)) {
-                                    //gửi other ID truyền qua chat
-                                    Intent intent = new Intent(getContext(), chat.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString("otherID", user.getId().toString());
-                                    bundle.putString("userID", currentuser);
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
-                                } else if (!dk1.equals(otherID)) {
+                                } else {
                                     Intent intent = new Intent(getContext(), profile.class);
                                     intent.putExtra("otherID", otherID);
                                     startActivity(intent);
                                 }
-
                             }
+
                         }
+
                     }
+
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Log.d("Firebase Error:", error.toException().toString());
+                        Log.d("Firebase Error: ", error.toException().getMessage());
                     }
                 });
-
             }
         });
     }
