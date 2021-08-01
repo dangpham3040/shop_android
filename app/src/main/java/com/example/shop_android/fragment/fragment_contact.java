@@ -128,7 +128,8 @@ public class fragment_contact extends Fragment {
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             if (ds.exists()) {
                                 if (ds.hasChild(otherID)) {
-                                    if(ds.child(otherID).child("UserID").equals(currentuser)){
+                                    if(ds.child(otherID).child("userID").getValue(String.class).equals(currentuser)
+                                            && ds.child(otherID).child("friendID").getValue(String.class).equals(otherID)){
                                         //gửi other ID truyền qua chat
                                         Intent intent = new Intent(getContext(), chat.class);
                                         Bundle bundle = new Bundle();
