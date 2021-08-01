@@ -128,15 +128,18 @@ public class fragment_contact extends Fragment {
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             if (ds.exists()) {
                                 if (ds.hasChild(otherID)) {
-                                    //gửi other ID truyền qua chat
-                                    Intent intent = new Intent(getContext(), chat.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putString("otherID",otherID);
-                                    bundle.putString("userID", currentuser);
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
-                                    //Dừng
-                                    break;
+                                    if(ds.child(otherID).child("UserID").equals(currentuser)){
+                                        //gửi other ID truyền qua chat
+                                        Intent intent = new Intent(getContext(), chat.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("otherID",otherID);
+                                        bundle.putString("userID", currentuser);
+                                        intent.putExtras(bundle);
+                                        startActivity(intent);
+                                        //Dừng
+                                        break;
+                                    }
+
                                 } else {
                                     Intent intent = new Intent(getContext(), profile.class);
                                     intent.putExtra("otherID", otherID);
