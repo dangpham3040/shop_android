@@ -1,4 +1,4 @@
-package com.example.shop_android;
+package com.example.shop_android.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.shop_android.R;
+import com.example.shop_android.model.User;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
@@ -30,6 +32,8 @@ public class UserAdapter extends ArrayAdapter {
         this.data = data;
 
     }
+
+
 
     @Override
     public int getCount() {

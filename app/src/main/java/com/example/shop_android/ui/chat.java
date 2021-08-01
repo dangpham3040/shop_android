@@ -1,4 +1,4 @@
-package com.example.shop_android;
+package com.example.shop_android.ui;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shop_android.R;
+import com.example.shop_android.ui.profile;
+import com.example.shop_android.ui.starup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -38,7 +41,7 @@ public class chat extends AppCompatActivity {
     private String userID = "";
     //Firebase
     private FirebaseDatabase Database;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mUser;
 
 
     @Override
@@ -54,10 +57,10 @@ public class chat extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Database = FirebaseDatabase.getInstance();
-                mDatabase = Database.getReference("User");
+                mUser = Database.getReference("User");
                 //add friend
 //                String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//                mDatabase.child(currentuser).child("friends").child(otherID).child("friendsID").setValue(otherID);
+//                mUser.child(currentuser).child("friends").child(otherID).child("friendsID").setValue(otherID);
 
             }
         });
@@ -72,7 +75,7 @@ public class chat extends AppCompatActivity {
         imgbback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),starup.class));
+                startActivity(new Intent(getApplicationContext(), starup.class));
             }
         });
         ortherAvata.setOnClickListener(new View.OnClickListener() {
@@ -104,8 +107,8 @@ public class chat extends AppCompatActivity {
 
         //Load danh sách user sắp xếp bằng id
         Database = FirebaseDatabase.getInstance();
-        mDatabase = Database.getReference("User");
-        Query check = mDatabase.orderByChild("id").equalTo(otherID);
+        mUser = Database.getReference("User");
+        Query check = mUser.orderByChild("id").equalTo(otherID);
         check.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -12,11 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         >
-        <activity android:name=".starup"/>
-        <activity android:name=".profile" />
-        <activity android:name=".chat"/>
-        <activity android:name=".Login"/>
-        <activity android:name=".registration"/>
+        <activity android:name=".ui.starup"/>
+        <activity android:name=".ui.profile" />
+        <activity android:name=".ui.chat"/>
+        <activity android:name=".ui.Login"/>
+        <activity android:name=".ui.registration"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

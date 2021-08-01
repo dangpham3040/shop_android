@@ -1,4 +1,4 @@
-package com.example.shop_android;
+package com.example.shop_android.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,10 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shop_android.R;
+import com.example.shop_android.fragment.fragment_contact;
+import com.example.shop_android.fragment.fragment_friends;
+import com.example.shop_android.fragment.fragment_profile;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +32,7 @@ public class starup extends AppCompatActivity {
     //firebase
     private FirebaseAuth fAuth;
     FirebaseDatabase Database;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +40,7 @@ public class starup extends AppCompatActivity {
         setContentView(R.layout.start_up);
 //        isOnline();
         Database = FirebaseDatabase.getInstance();
-        mDatabase = Database.getReference("User");
+        mUser = Database.getReference("User");
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom);
         navigation = Navigation.findNavController(this, R.id.fragment);
         //NavigationUI.setupWithNavController(bottomNavigationView,navigation);
@@ -54,6 +58,10 @@ public class starup extends AppCompatActivity {
                         return true;
                     case R.id.fragment_profile:
                         fragment = new fragment_profile();
+                        loadFragment(fragment);
+                        return true;
+                    case R.id.fragment_friends:
+                        fragment = new fragment_friends();
                         loadFragment(fragment);
                         return true;
                 }

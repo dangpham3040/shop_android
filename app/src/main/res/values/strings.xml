@@ -7,6 +7,8 @@
     <string name="del">Xoá</string>
     <string name="Upadte">Sửa</string>
     <string name="show">Hiển thị</string>
+    <string name="AddFriend">Add Friend</string>
+    <string name="remove">Remove</string>
 
     //place_hoder
     <string name="fist">Fistname: </string>
@@ -26,14 +28,12 @@
     <string name="register">register</string>
     <string name="logout">Logout</string>
     <string name="login">Login</string>
-    <string name="Contact">Contact</string>
     <string name="forgot">forgot password?!</string>
     //text link
     <string name="text_register">"Don't have an account yet?"</string>
     <string name="text_login">Already have an account?</string>
     //link
     <string name="link_login"><font color='blue'> sign in!</font></string>
-    <!--    <string name="link_register">"<font color='#FF000000'> </font><font color= '#02157C'></font>"</string>-->
     <string name="link_register"><font color='blue'> sign up!</font></string>
     //chat bar
     <string name="type">Type something...</string>
@@ -51,8 +51,9 @@
         <item>Nam</item>
         <item>Nữ</item>
     </array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    //menu
+    <string name="setting">Setting</string>
+    <string name="friends">Friends</string>
+    <string name="Contact">Contact</string>
 
 </resources>

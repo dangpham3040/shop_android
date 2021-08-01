@@ -1,4 +1,4 @@
-package com.example.shop_android;
+package com.example.shop_android.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -19,6 +19,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.example.shop_android.R;
+import com.example.shop_android.ui.starup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,7 +39,7 @@ public class profile extends AppCompatActivity {
     private RadioButton male, female;
     //firebase
     private FirebaseDatabase Database;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mUser;
     private FirebaseAuth fAuth;
     //bien
     private String gioitinh;
@@ -68,7 +70,7 @@ public class profile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(getApplicationContext(),starup.class));
+                startActivity(new Intent(getApplicationContext(), starup.class));
             }
         });
         save.setOnClickListener(new View.OnClickListener() {
@@ -223,14 +225,14 @@ public class profile extends AppCompatActivity {
         b.setMessage("Are you sure ?");
         b.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                mDatabase.child(otherID).child("fist").setValue(fist.getText().toString());
-                mDatabase.child(otherID).child("last").setValue(last.getText().toString());
-                mDatabase.child(otherID).child("email").setValue(email.getText().toString());
+                mUser.child(otherID).child("fist").setValue(fist.getText().toString());
+                mUser.child(otherID).child("last").setValue(last.getText().toString());
+                mUser.child(otherID).child("email").setValue(email.getText().toString());
                 if (male.isChecked()) {
-                    mDatabase.child(otherID).child("sex").setValue(nam);
+                    mUser.child(otherID).child("sex").setValue(nam);
                 }
                 if (female.isChecked()) {
-                    mDatabase.child(otherID).child("sex").setValue(nu);
+                    mUser.child(otherID).child("sex").setValue(nu);
                 }
                 startActivity(new Intent(getApplicationContext(), starup.class));
             }
@@ -265,8 +267,8 @@ public class profile extends AppCompatActivity {
         currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
         otherID = intent.getStringExtra("otherID");
         Database = FirebaseDatabase.getInstance();
-        mDatabase = Database.getReference("User");
-        Query check = mDatabase.orderByChild("id").equalTo(otherID);
+        mUser = Database.getReference("User");
+        Query check = mUser.orderByChild("id").equalTo(otherID);
 
         check.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

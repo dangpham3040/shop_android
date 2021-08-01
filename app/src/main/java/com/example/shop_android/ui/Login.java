@@ -1,4 +1,4 @@
-package com.example.shop_android;
+package com.example.shop_android.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.TooltipCompat;
@@ -17,6 +17,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shop_android.R;
+import com.example.shop_android.ui.registration;
+import com.example.shop_android.ui.starup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -39,7 +42,7 @@ public class Login extends AppCompatActivity {
     //firebase
     private FirebaseAuth fAuth;
     private FirebaseDatabase Database;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mUser;
 
 
 
@@ -161,9 +164,9 @@ public class Login extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 //lấy id của user hiện tại
                 Database = FirebaseDatabase.getInstance();
-                mDatabase = Database.getReference("User");
+                mUser = Database.getReference("User");
                 String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                mDatabase.child(currentuser).child("status").setValue("online");
+                mUser.child(currentuser).child("status").setValue("online");
 
             } else {
                 Toast.makeText(getApplicationContext(),

@@ -6,13 +6,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.example.shop_android.ui.Login;
+import com.example.shop_android.ui.starup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
     FirebaseDatabase Database;
-    DatabaseReference mDatabase;
+    DatabaseReference mUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,11 +48,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         Database = FirebaseDatabase.getInstance();
-        mDatabase = Database.getReference("User");
+        mUser = Database.getReference("User");
         String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mDatabase.child(currentuser).child("status").setValue("ofline");
+        mUser.child(currentuser).child("status").setValue("offline");
         super.onDestroy();
-
     }
 
 

@@ -1,4 +1,4 @@
-package com.example.shop_android;
+package com.example.shop_android.fragment;
 
 import android.app.Service;
 import android.content.Intent;
@@ -17,6 +17,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.shop_android.R;
+import com.example.shop_android.adapter.UserAdapter;
+import com.example.shop_android.ui.chat;
+
+import com.example.shop_android.model.User;
+import com.example.shop_android.ui.profile;
 import com.google.android.gms.common.config.GservicesValue;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +33,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.ServerValue;
 
+import java.net.URI;
 import java.security.Provider;
 import java.security.Timestamp;
 import java.sql.Connection;
@@ -34,6 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
 
 public class fragment_contact extends Fragment {
     private static final String TAG = "test";
@@ -46,8 +54,8 @@ public class fragment_contact extends Fragment {
     //Firebase
 
     private FirebaseDatabase Database;
-    private DatabaseReference mDatabase;
-    private DatabaseReference fDatabase;
+    private DatabaseReference mUser;
+    private DatabaseReference mFriend;
     //bien
     private String currentuser = "";
     private String otherID = "";
@@ -67,15 +75,14 @@ public class fragment_contact extends Fragment {
 
         listView = (ListView) view.findViewById(R.id.list);
         userAdapter = new UserAdapter(getContext(), R.layout.list, listuser);
-
         Database = FirebaseDatabase.getInstance();
-        mDatabase = Database.getReference("User");
+        mUser = Database.getReference("User");
 
         //lấy id của user hiện tại
         currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
         listView.setAdapter(userAdapter);
         //load list user
-        mDatabase.addValueEventListener(new ValueEventListener() {
+        mUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //xoá list user
@@ -108,44 +115,34 @@ public class fragment_contact extends Fragment {
                 String full = user.getFist() + " " + user.getLast();
                 Log.d(TAG, full);
                 otherID = user.getId().toString();
-                fDatabase = Database.getReference("friendship");
+                mFriend = Database.getReference("friendship");
                 //add friend test
 
-//                mDatabase.child(otherID).child("id").setValue(otherID);
-//                mDatabase.child(otherID).child(currentuser).child("friendID").setValue(currentuser);
-//                fDatabase.child(currentuser).child(otherID).child("userID").setValue(currentuser);
-//                fDatabase.child(currentuser).child(otherID).child("friendID").setValue(otherID);
-
-                fDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+//                mUser.child(otherID).child("userID").setValue(otherID);
+//                mUser.child(otherID).child(currentuser).child("friendID").setValue(currentuser);
+//                mFriend.child(currentuser).child(otherID).child("userID").setValue(currentuser);
+//                mFriend.child(currentuser).child(otherID).child("friendID").setValue(otherID);
+                mFriend.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             if (ds.exists()) {
                                 if (ds.hasChild(otherID)) {
-                                    if (ds.child(otherID).child("userID").getValue(String.class).equals(currentuser)
-                                            && ds.child(otherID).child("friendID").getValue(String.class).equals(otherID)) {
-                                        //gửi other ID truyền qua chat
-                                        Intent intent = new Intent(getContext(), chat.class);
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("otherID", user.getId().toString());
-                                        bundle.putString("userID", currentuser);
-                                        intent.putExtras(bundle);
-                                        startActivity(intent);
-                                    }
-                                    else {
-                                        Intent intent = new Intent(getContext(), profile.class);
-                                        intent.putExtra("otherID", otherID);
-                                        startActivity(intent);
-                                    }
-
+                                    //gửi other ID truyền qua chat
+                                    Intent intent = new Intent(getContext(), chat.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("otherID",otherID);
+                                    bundle.putString("userID", currentuser);
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
+                                    //Dừng
+                                    break;
                                 } else {
                                     Intent intent = new Intent(getContext(), profile.class);
                                     intent.putExtra("otherID", otherID);
                                     startActivity(intent);
                                 }
                             }
-
                         }
 
                     }

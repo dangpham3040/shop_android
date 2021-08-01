@@ -1,4 +1,4 @@
-package com.example.shop_android;
+package com.example.shop_android.fragment;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -28,6 +28,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+
+import com.example.shop_android.R;
+
+import com.example.shop_android.ui.Login;
+import com.example.shop_android.ui.starup;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -84,7 +89,7 @@ public class fragment_profile extends Fragment {
     private final int PICK_IMAGE_REQUEST = 10;
     private Uri filePath;
     private FirebaseDatabase Database;
-    private DatabaseReference mDatabase;
+    private DatabaseReference mUser;
     private FirebaseAuth fAuth;
     private FirebaseStorage storage;
     private StorageReference storageReference;
@@ -151,7 +156,7 @@ public class fragment_profile extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), Login.class));
-                mDatabase.child(currentuser).child("status").setValue("offline");
+                mUser.child(currentuser).child("status").setValue("offline");
                 //firebase logout
                 fAuth.getInstance().signOut();
             }
@@ -391,10 +396,10 @@ public class fragment_profile extends Fragment {
         b.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 ///gán dữ liệu vào firebase
-                mDatabase.child(otherID).child("fist").setValue(fist.getText().toString());
-                mDatabase.child(otherID).child("last").setValue(last.getText().toString());
-                mDatabase.child(otherID).child("email").setValue(email.getText().toString());
-                mDatabase.child(currentuser).child("pic").setValue(link);
+                mUser.child(otherID).child("fist").setValue(fist.getText().toString());
+                mUser.child(otherID).child("last").setValue(last.getText().toString());
+                mUser.child(otherID).child("email").setValue(email.getText().toString());
+                mUser.child(currentuser).child("pic").setValue(link);
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 user.updateEmail(email.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -409,10 +414,10 @@ public class fragment_profile extends Fragment {
                     }
                 });
                 if (male.isChecked()) {
-                    mDatabase.child(otherID).child("sex").setValue(nam);
+                    mUser.child(otherID).child("sex").setValue(nam);
                 }
                 if (female.isChecked()) {
-                    mDatabase.child(otherID).child("sex").setValue(nu);
+                    mUser.child(otherID).child("sex").setValue(nu);
                 }
                 startActivity(new Intent(getContext(), starup.class));
             }
@@ -451,8 +456,8 @@ public class fragment_profile extends Fragment {
         otherID = currentuser;
         //load dữ liệu của user hiện tại
         Database = FirebaseDatabase.getInstance();
-        mDatabase = Database.getReference("User");
-        Query check = mDatabase.orderByChild("id").equalTo(otherID);
+        mUser = Database.getReference("User");
+        Query check = mUser.orderByChild("id").equalTo(currentuser);
         check.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -1,4 +1,4 @@
-package com.example.shop_android;
+package com.example.shop_android.model;
 
 public class User {
     String id;

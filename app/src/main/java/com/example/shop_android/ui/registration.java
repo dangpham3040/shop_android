@@ -1,4 +1,4 @@
-package com.example.shop_android;
+package com.example.shop_android.ui;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +18,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shop_android.R;
+import com.example.shop_android.model.User;
+import com.example.shop_android.ui.starup;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -48,7 +51,8 @@ public class registration extends AppCompatActivity {
     //firebase
     FirebaseAuth fAuth;
     FirebaseDatabase Database;
-    DatabaseReference mDatabase;
+    DatabaseReference mUser;
+
 
 
     @Override
@@ -251,9 +255,8 @@ public class registration extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isComplete()) {
-                    Toast.makeText(registration.this, "ok", Toast.LENGTH_SHORT).show();
+                    //cập nhật dữ lieu
                     UpdateUI();
-
 
                 } else {
                     Toast.makeText(registration.this, "Error:" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -270,11 +273,10 @@ public class registration extends AppCompatActivity {
             gioitinh = "Nam";
         }
 
-        Database = FirebaseDatabase.getInstance();
-        mDatabase = Database.getReference("User");
+
         String keyid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         user = new User(keyid, fistname, lastname, Email, gioitinh, anh);
-        mDatabase.child(keyid).setValue(user);
+        mUser.child(keyid).setValue(user);
 
         Intent intent = new Intent(getApplicationContext(), starup.class);
         startActivity(intent);
@@ -304,9 +306,14 @@ public class registration extends AppCompatActivity {
         pass = findViewById(R.id.pass);
         cpass = findViewById(R.id.cpass);
         sex = findViewById(R.id.spsex);
+
         link_login = findViewById(R.id.link_login);
         btnregister = findViewById(R.id.btnregister);
         progressBar = findViewById(R.id.progressBar);
+
+        Database = FirebaseDatabase.getInstance();
+        mUser = Database.getReference("User");
+
         fAuth = FirebaseAuth.getInstance();
     }
 }
