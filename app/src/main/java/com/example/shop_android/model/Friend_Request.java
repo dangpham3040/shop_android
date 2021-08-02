@@ -13,6 +13,10 @@ public class Friend_Request {
         this.status = status;
     }
 
+    public Friend_Request() {
+
+    }
+
     public String getStatus() {
         return status;
     }

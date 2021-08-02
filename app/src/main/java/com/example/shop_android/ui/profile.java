@@ -20,6 +20,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.shop_android.R;
+import com.example.shop_android.model.Friend_Request;
+import com.example.shop_android.model.User;
 import com.example.shop_android.ui.starup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +33,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class profile extends AppCompatActivity {
     TextView save, cancel;
     private CircularImageView profileimg;
@@ -40,6 +45,7 @@ public class profile extends AppCompatActivity {
     //firebase
     private FirebaseDatabase Database;
     private DatabaseReference mUser;
+    private DatabaseReference mfRequest;
     private FirebaseAuth fAuth;
     //bien
     private String gioitinh;
@@ -253,6 +259,7 @@ public class profile extends AppCompatActivity {
 
 
     private void setControl() {
+
         profileimg = findViewById(R.id.imageView);
         fist = findViewById(R.id.fist);
         last = findViewById(R.id.last);
@@ -267,6 +274,7 @@ public class profile extends AppCompatActivity {
         currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
         otherID = intent.getStringExtra("otherID");
         Database = FirebaseDatabase.getInstance();
+        mfRequest = Database.getReference("friend_request");
         mUser = Database.getReference("User");
         Query check = mUser.orderByChild("id").equalTo(otherID);
 
@@ -276,27 +284,58 @@ public class profile extends AppCompatActivity {
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     if (ds.exists()) {
                         Fist = ds.child("fist").getValue(String.class);
-                        fist.setText(Fist);
                         Last = ds.child("last").getValue(String.class);
-                        last.setText(Last);
                         Email = ds.child("email").getValue(String.class);
-                        email.setText(Email);
                         gioitinh = ds.child("sex").getValue(String.class);
+                        status = ds.child("status").getValue(String.class);
 
+                        fist.setText(Fist);
+                        last.setText(Last);
+                        email.setText(Email);
                         if (gioitinh.equals(nam)) {
                             male.setChecked(true);
                         } else {
                             female.setChecked(true);
                         }
                         link = ds.child("pic").getValue(String.class);
-                         status = ds.child("status").getValue(String.class);
+
                         Picasso.get()
                                 .load(link)
                                 .fit()
 //                                .transform(transformation)
                                 .into(profileimg);
                         isOnline();
-
+//                         //test gửi lời mời kết bạn
+//                        Friend_Request friend_request;
+//                        friend_request = new Friend_Request();
+//                        mUser = Database.getReference("User");
+//                        Query check = mUser.orderByChild("id").equalTo(currentuser);
+//                        check.addValueEventListener(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//                                for (DataSnapshot ds : snapshot.getChildren()) {
+//                                    String id = ds.child("id").getValue(String.class);
+//                                    String fistname = ds.child("fist").getValue(String.class);
+//                                    String Lastname = ds.child("last").getValue(String.class);
+//                                    String link = ds.child("pic").getValue(String.class);
+//                                    String status = ds.child("status").getValue(String.class);
+//                                    String fullname = fistname + " " + Lastname;
+//
+//                                    Map<String, String> map = new HashMap<>();
+//                                    map.put("id", id);
+//                                    map.put("name", fullname);
+//                                    map.put("pic", link);
+//                                    map.put("status", status);
+//                                    mfRequest.child(otherID).child(currentuser).setValue(map);
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(@NonNull DatabaseError error) {
+//                                Log.i("TAG", "loadPost:onCancelled", error.toException());
+//                            }
+//                        });
 
                     } else {
                         Log.d("user", "khong ton tai");

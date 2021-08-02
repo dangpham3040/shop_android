@@ -2,6 +2,7 @@ package com.example.shop_android.fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -17,6 +18,12 @@ import com.example.shop_android.adapter.UserAdapter;
 import com.example.shop_android.adapter.friendrequest_Adapter;
 import com.example.shop_android.model.Friend_Request;
 import com.example.shop_android.model.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -37,10 +44,16 @@ public class fragment_friends extends Fragment {
     private String mParam2;
 
     ListView listView;
-    Button btnadd, btnremove;
+    //Firebase
+    FirebaseDatabase Database;
+    DatabaseReference mfRequest;
+    ///Bien
+    String currentuser="";
+    private Friend_Request request;
+
 
     private ArrayList<Friend_Request> listfriends = new ArrayList<>();
-    private friendrequest_Adapter friendrequest_adapter;
+    private static friendrequest_Adapter friendrequest_adapter;
     View view;
 
     public fragment_friends() {
@@ -89,13 +102,42 @@ public class fragment_friends extends Fragment {
     private void setControl() {
         listView = view.findViewById(R.id.listfriend);
 
+        currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        Database=FirebaseDatabase.getInstance();
+        mfRequest = Database.getReference("friend_request/"+currentuser);
 
         friendrequest_adapter = new friendrequest_Adapter(getContext(), R.layout.friends_request, listfriends);
         listView.setAdapter(friendrequest_adapter);
-        Friend_Request friend = new Friend_Request("1", "dang", "https://firebasestorage.googleapis.com/v0/b/android-shop-ae9d2.appspot.com/o/Image%2Fuser.jpg?alt=media&token=710dd3aa-8bb1-4048-bb0f-13320ad94825",
-                "online");
-        listfriends.add(friend);
-        friendrequest_adapter.notifyDataSetChanged();
+
+        mfRequest.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listfriends.removeAll(listfriends);
+                for(DataSnapshot ds: snapshot.getChildren()){
+                    if(ds.exists())
+                    {
+                        Friend_Request friend_request=new Friend_Request();
+                        friend_request=ds.getValue(Friend_Request.class);
+                        listfriends.add(friend_request);
+                        friendrequest_adapter.notifyDataSetChanged();
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
+    public static void update(int i) {
+        friendrequest_adapter.remove(i);
     }
 
     private void setEnvet() {

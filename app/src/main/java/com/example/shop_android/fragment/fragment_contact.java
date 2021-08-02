@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.shop_android.R;
 import com.example.shop_android.adapter.UserAdapter;
+import com.example.shop_android.model.Friend_Request;
 import com.example.shop_android.ui.chat;
 
 import com.example.shop_android.model.User;
@@ -56,6 +57,7 @@ public class fragment_contact extends Fragment {
     private FirebaseDatabase Database;
     private DatabaseReference mUser;
     private DatabaseReference mFriend;
+    private DatabaseReference mfRequest;
     //bien
     private String currentuser = "";
     private String otherID = "";
@@ -77,6 +79,8 @@ public class fragment_contact extends Fragment {
         userAdapter = new UserAdapter(getContext(), R.layout.list, listuser);
         Database = FirebaseDatabase.getInstance();
         mUser = Database.getReference("User");
+        mFriend = Database.getReference("friendship");
+        mfRequest = Database.getReference("friend_request");
 
         //lấy id của user hiện tại
         currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -115,25 +119,19 @@ public class fragment_contact extends Fragment {
                 String full = user.getFist() + " " + user.getLast();
                 Log.d(TAG, full);
                 otherID = user.getId().toString();
-                mFriend = Database.getReference("friendship");
-                //add friend test
 
-//                mUser.child(otherID).child("userID").setValue(otherID);
-//                mUser.child(otherID).child(currentuser).child("friendID").setValue(currentuser);
-//                mFriend.child(currentuser).child(otherID).child("userID").setValue(currentuser);
-//                mFriend.child(currentuser).child(otherID).child("friendID").setValue(otherID);
                 mFriend.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             if (ds.exists()) {
                                 if (ds.hasChild(otherID)) {
-                                    if(ds.child(otherID).child("userID").getValue(String.class).equals(currentuser)
-                                            && ds.child(otherID).child("friendID").getValue(String.class).equals(otherID)){
+                                    if (ds.child(otherID).child("userID").getValue(String.class).equals(currentuser)
+                                            && ds.child(otherID).child("friendID").getValue(String.class).equals(otherID)) {
                                         //gửi other ID truyền qua chat
                                         Intent intent = new Intent(getContext(), chat.class);
                                         Bundle bundle = new Bundle();
-                                        bundle.putString("otherID",otherID);
+                                        bundle.putString("otherID", otherID);
                                         bundle.putString("userID", currentuser);
                                         intent.putExtras(bundle);
                                         startActivity(intent);
@@ -142,11 +140,13 @@ public class fragment_contact extends Fragment {
                                     }
 
                                 } else {
+                                    // Vào profile
                                     Intent intent = new Intent(getContext(), profile.class);
                                     intent.putExtra("otherID", otherID);
                                     startActivity(intent);
                                 }
                             }
+
                         }
 
                     }
