@@ -306,24 +306,9 @@ public class profile extends AppCompatActivity {
                                 .into(profileimg);
                         isOnline();
 //                         //test gửi lời mời kết bạn
-
-                        mUser = Database.getReference("User");
-                        Query check = mUser.orderByChild("id").equalTo(currentuser);
-                        check.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                                for (DataSnapshot ds : snapshot.getChildren()) {
-                                    Friend_Request friend_request= new Friend_Request(currentuser,otherID);
-                                    mfRequest.child(otherID).child(currentuser).setValue(friend_request);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                                Log.i("TAG", "loadPost:onCancelled", error.toException());
-                            }
-                        });
+//
+//                        Friend_Request friend_request= new Friend_Request(currentuser,otherID);
+//                        mfRequest.child(otherID).child(currentuser).setValue(friend_request);
 
                     } else {
                         Log.d("user", "khong ton tai");
