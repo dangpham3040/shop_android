@@ -1,52 +1,31 @@
 package com.example.shop_android.model;
 
 public class Friend_Request {
-    String id;
-    String name;
-    String pic;
-    String status;
-
-    public Friend_Request(String id, String name, String pic, String status) {
-        this.id = id;
-        this.name = name;
-        this.pic = pic;
-        this.status = status;
-    }
+    String idSender;
+   String idReceiver;
 
     public Friend_Request() {
 
     }
 
-    public String getStatus() {
-        return status;
+    public String getIdSender() {
+        return idSender;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setIdSender(String idSender) {
+        this.idSender = idSender;
     }
 
-    public String getPic() {
-        return pic;
+    public String getIdReceiver() {
+        return idReceiver;
     }
 
-    public void setPic(String pic) {
-        this.pic = pic;
+    public void setIdReceiver(String idReceiver) {
+        this.idReceiver = idReceiver;
     }
 
-    public String getId() {
-        return id;
+    public Friend_Request(String idSender, String idReceiver) {
+        this.idSender = idSender;
+        this.idReceiver = idReceiver;
     }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
 }
