@@ -42,6 +42,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 
 
 public class fragment_contact extends Fragment {
@@ -58,6 +59,7 @@ public class fragment_contact extends Fragment {
     private DatabaseReference mUser;
     private DatabaseReference mFriend;
     private DatabaseReference mfRequest;
+    private DatabaseReference mTest;
     //bien
     private String currentuser = "";
     private String otherID = "";
@@ -93,6 +95,7 @@ public class fragment_contact extends Fragment {
                 listuser.removeAll(listuser);
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     if (!ds.child("id").getValue(String.class).equals(currentuser)) {
+
                         user = ds.getValue(User.class);
                         listuser.add(user);
                     }
@@ -105,9 +108,10 @@ public class fragment_contact extends Fragment {
                 Log.i(TAG, "loadPost:onCancelled", error.toException());
             }
         });
-        //test giờ hien tai
-//        String timeStamp = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
-//        Toast.makeText(getContext(), "Current Time Stamp: " + timeStamp, Toast.LENGTH_SHORT).show();
+        //test timestamp
+//        Long tsLong = System.currentTimeMillis() / 1000;
+//        String ts = tsLong.toString();
+
     }
 
     private void setEvent() {

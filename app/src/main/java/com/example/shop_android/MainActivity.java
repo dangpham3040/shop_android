@@ -15,20 +15,20 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends AppCompatActivity {
     FirebaseDatabase Database;
     DatabaseReference mUser;
+
+    String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setControl();
-        setEnvet();
-    }
-
-    private void setEnvet() {
 
     }
+
 
 
     private void setControl() {
+
         //màn hình loading....
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -44,14 +44,6 @@ public class MainActivity extends AppCompatActivity {
         }, 3500);
 
 
-    }
-    @Override
-    protected void onDestroy(){
-        Database = FirebaseDatabase.getInstance();
-        mUser = Database.getReference("User");
-        String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mUser.child(currentuser).child("status").setValue("offline");
-        super.onDestroy();
     }
 
 

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.TooltipCompat;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -106,6 +107,8 @@ public class Login extends AppCompatActivity {
                 }
                 if (kiemtra() == true) {
                     btnlogin.setEnabled(true);
+                    btnlogin.setBackgroundColor(Color.BLUE);
+                    btnlogin.setTextColor(Color.WHITE);
                 }
             }
         });
@@ -199,6 +202,7 @@ public class Login extends AppCompatActivity {
             email.requestFocus();
             return false;
         } else {
+
             return true;
         }
     }

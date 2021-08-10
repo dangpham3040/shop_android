@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shop_android.R;
+import com.example.shop_android.data.StaticConfig;
 import com.example.shop_android.ui.profile;
 import com.example.shop_android.ui.starup;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,8 +41,7 @@ public class chat extends AppCompatActivity {
     private String fist, last, status;
     private String userID = "";
     //Firebase
-    private FirebaseDatabase Database;
-    private DatabaseReference mUser;
+
 
 
     @Override
@@ -56,8 +56,7 @@ public class chat extends AppCompatActivity {
         imgsend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Database = FirebaseDatabase.getInstance();
-                mUser = Database.getReference("User");
+
                 //add friend
 //                String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
 //                mUser.child(currentuser).child("friends").child(otherID).child("friendsID").setValue(otherID);
@@ -106,9 +105,8 @@ public class chat extends AppCompatActivity {
 
 
         //Load danh sách user sắp xếp bằng id
-        Database = FirebaseDatabase.getInstance();
-        mUser = Database.getReference("User");
-        Query check = mUser.orderByChild("id").equalTo(otherID);
+
+        Query check = StaticConfig.mUser.orderByChild("id").equalTo(otherID);
         check.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

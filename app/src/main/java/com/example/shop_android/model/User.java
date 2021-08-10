@@ -19,6 +19,7 @@ public class User {
         this.status = "online";
     }
 
+
     public User() {
     }
 

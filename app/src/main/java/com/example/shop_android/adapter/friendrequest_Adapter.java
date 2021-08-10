@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.shop_android.R;
+import com.example.shop_android.data.StaticConfig;
 import com.example.shop_android.fragment.fragment_friends;
 import com.example.shop_android.model.Friend_Request;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,13 +35,10 @@ public class friendrequest_Adapter extends ArrayAdapter {
     Context context;
     int resource;
     ArrayList<Friend_Request> data;
-    //firebase
-    FirebaseDatabase Database = FirebaseDatabase.getInstance();
-    DatabaseReference mFriend = Database.getReference("friendship");
-    DatabaseReference mfRequest = Database.getReference("friend_request");
-    DatabaseReference mUser = Database.getReference("User");
+
     //bien
     String fullname = "";
+    String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     public friendrequest_Adapter(@NonNull Context context, int resource, ArrayList<Friend_Request> data) {
         super(context, resource, data);
@@ -65,13 +63,13 @@ public class friendrequest_Adapter extends ArrayAdapter {
         Button btnRemove = convertView.findViewById(R.id.remove);
 
         Friend_Request request = data.get(position);
-
-        Query check = mUser.orderByChild("id").equalTo(request.getIdSender());
+        Query check = StaticConfig.mUser.orderByChild("id").equalTo(request.getIdSender());
         check.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     if (ds.exists()) {
+
                         fullname = ds.child("fist").getValue(String.class) + " " + ds.child("last").getValue(String.class);
                         name.setText(fullname);
 
@@ -84,6 +82,8 @@ public class friendrequest_Adapter extends ArrayAdapter {
                                 .load(ds.child("pic").getValue(String.class))
                                 .resize(50, 50) // here you resize your image to whatever width and height you like
                                 .into(pic);
+
+
                     }
                 }
             }
@@ -94,20 +94,21 @@ public class friendrequest_Adapter extends ArrayAdapter {
             }
         });
 
-        String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //cho vào danh sách bạn của người dùng
-                mFriend.child(currentuser).child(request.getIdSender()).child("userID").setValue(currentuser);
-                mFriend.child(currentuser).child(request.getIdSender()).child("friendID").setValue(request.getIdSender());
+                 StaticConfig.mFriend.child(currentuser).child(request.getIdSender()).child("userID").setValue(currentuser);
+                 StaticConfig.mFriend.child(currentuser).child(request.getIdSender()).child("friendID").setValue(request.getIdSender());
                 //cho vào danh sách bạn của bạn
-                mFriend.child(request.getIdSender()).child(currentuser).child("userID").setValue(request.getIdSender());
-                mFriend.child(request.getIdSender()).child(currentuser).child("friendID").setValue(currentuser);
+                 StaticConfig.mFriend.child(request.getIdSender()).child(currentuser).child("userID").setValue(request.getIdSender());
+                 StaticConfig.mFriend.child(request.getIdSender()).child(currentuser).child("friendID").setValue(currentuser);
                 // xoá khỏi danh sách yêu cầu kết bạn
                 // cập nhập ui
                 fragment_friends.update(position);
-                mfRequest.child(currentuser).child(request.getIdSender()).removeValue();
+                StaticConfig.mfRequest.child(currentuser).child(request.getIdSender()).removeValue();
 
             }
         });
@@ -117,8 +118,7 @@ public class friendrequest_Adapter extends ArrayAdapter {
                 //Cập nhật ui
                 fragment_friends.update(position);
                 // xoá khỏi danh sách yêu cầu kết bạn
-                mfRequest.child(currentuser).child(request.getIdSender()).removeValue();
-
+                StaticConfig.mfRequest.child(currentuser).child(request.getIdSender()).removeValue();
             }
         });
         return convertView;

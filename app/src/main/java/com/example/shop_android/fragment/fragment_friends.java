@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.shop_android.R;
 import com.example.shop_android.adapter.UserAdapter;
 import com.example.shop_android.adapter.friendrequest_Adapter;
+import com.example.shop_android.data.StaticConfig;
 import com.example.shop_android.model.Friend_Request;
 import com.example.shop_android.model.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,13 +43,9 @@ public class fragment_friends extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
     ListView listView;
-    //Firebase
-    FirebaseDatabase Database;
-    DatabaseReference mfRequest;
     ///Bien
-    String currentuser="";
+    String currentuser = "";
     private Friend_Request request;
 
 
@@ -104,21 +101,20 @@ public class fragment_friends extends Fragment {
 
         currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        Database=FirebaseDatabase.getInstance();
-        mfRequest = Database.getReference("friend_request/"+currentuser);
+
+        StaticConfig.mfRequest = StaticConfig.Database.getReference("friend_request/" + currentuser);
 
         friendrequest_adapter = new friendrequest_Adapter(getContext(), R.layout.friends_request, listfriends);
         listView.setAdapter(friendrequest_adapter);
 
-        mfRequest.addValueEventListener(new ValueEventListener() {
+        StaticConfig.mfRequest.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listfriends.removeAll(listfriends);
-                for(DataSnapshot ds: snapshot.getChildren()){
-                    if(ds.exists())
-                    {
-                        Friend_Request friend_request=new Friend_Request();
-                        friend_request=ds.getValue(Friend_Request.class);
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    if (ds.exists()) {
+                        Friend_Request friend_request = new Friend_Request();
+                        friend_request = ds.getValue(Friend_Request.class);
                         listfriends.add(friend_request);
                         friendrequest_adapter.notifyDataSetChanged();
                     }

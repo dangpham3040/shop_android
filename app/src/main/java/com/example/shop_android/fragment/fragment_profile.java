@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 import com.example.shop_android.R;
 
+import com.example.shop_android.data.StaticConfig;
 import com.example.shop_android.ui.Login;
 import com.example.shop_android.ui.starup;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -86,18 +87,15 @@ public class fragment_profile extends Fragment {
     private Button btnlogout;
 
     //Firebase
-    private final int PICK_IMAGE_REQUEST = 10;
+
     private Uri filePath;
-    private FirebaseDatabase Database;
-    private DatabaseReference mUser;
-    private FirebaseAuth fAuth;
-    private FirebaseStorage storage;
-    private StorageReference storageReference;
+
+
+
     //bien
     private String gioitinh;
     private String Fist, Last, Email;
-    private String otherID;
-    private String currentuser;
+
     private String link;
     private String nam = "Nam", nu = "Nữ";
     private String fistname = "", lastname = "", emailuser = "";
@@ -156,9 +154,9 @@ public class fragment_profile extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), Login.class));
-                mUser.child(currentuser).child("status").setValue("offline");
+                StaticConfig.mUser.child(StaticConfig.currentuser).child("status").setValue("offline");
                 //firebase logout
-                fAuth.getInstance().signOut();
+                StaticConfig.fAuth.getInstance().signOut();
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -305,14 +303,14 @@ public class fragment_profile extends Fragment {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), StaticConfig.PICK_IMAGE_REQUEST);
     }
 
     //gán dữ liệu vào filePath
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK
+        if (requestCode == StaticConfig.PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK
                 && data != null && data.getData() != null) {
             filePath = data.getData();
             try {
@@ -336,7 +334,7 @@ public class fragment_profile extends Fragment {
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
 
-            StorageReference ref = storageReference.child("Avatar/" + currentuser + "/" + UUID.randomUUID().toString());
+            StorageReference ref = StaticConfig.storageReference.child("Avatar/" + StaticConfig.currentuser + "/" + UUID.randomUUID().toString());
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -396,13 +394,13 @@ public class fragment_profile extends Fragment {
         b.setPositiveButton("yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 ///gán dữ liệu vào firebase
-                mUser.child(otherID).child("fist").setValue(fist.getText().toString());
-                mUser.child(otherID).child("last").setValue(last.getText().toString());
-                mUser.child(otherID).child("email").setValue(email.getText().toString());
-                mUser.child(currentuser).child("pic").setValue(link);
+                StaticConfig.mUser.child(StaticConfig.currentuser).child("fist").setValue(fist.getText().toString());
+                StaticConfig.mUser.child(StaticConfig.currentuser).child("last").setValue(last.getText().toString());
+                StaticConfig.mUser.child(StaticConfig.currentuser).child("email").setValue(email.getText().toString());
+                StaticConfig.mUser.child(StaticConfig.currentuser).child("pic").setValue(link);
 
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                user.updateEmail(email.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                StaticConfig.updateUser.updateEmail(email.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         String TAG = "\"Update Email:\"";
@@ -414,10 +412,10 @@ public class fragment_profile extends Fragment {
                     }
                 });
                 if (male.isChecked()) {
-                    mUser.child(otherID).child("sex").setValue(nam);
+                    StaticConfig.mUser.child(StaticConfig.currentuser).child("sex").setValue(nam);
                 }
                 if (female.isChecked()) {
-                    mUser.child(otherID).child("sex").setValue(nu);
+                    StaticConfig.mUser.child(StaticConfig.currentuser).child("sex").setValue(nu);
                 }
                 startActivity(new Intent(getContext(), starup.class));
             }
@@ -450,14 +448,11 @@ public class fragment_profile extends Fragment {
         radioGroup = view.findViewById(R.id.RadioGroup);
         btnlogout = view.findViewById(R.id.btnlogout);
 
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
-        currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        otherID = currentuser;
+     
+
         //load dữ liệu của user hiện tại
-        Database = FirebaseDatabase.getInstance();
-        mUser = Database.getReference("User");
-        Query check = mUser.orderByChild("id").equalTo(currentuser);
+
+        Query check = StaticConfig.mUser.orderByChild("id").equalTo(StaticConfig.currentuser);
         check.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -510,7 +505,7 @@ public class fragment_profile extends Fragment {
 
     //kiểm tra xem có đúng là user hiện tại không
     private boolean iscurrentuser() {
-        if (otherID.equals(currentuser)) {
+        if (StaticConfig.currentuser.equals(StaticConfig.currentuser)) {
             return true;
         }
         return false;

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shop_android.R;
+import com.example.shop_android.data.StaticConfig;
 import com.example.shop_android.fragment.fragment_contact;
 import com.example.shop_android.fragment.fragment_friends;
 import com.example.shop_android.fragment.fragment_profile;
@@ -27,20 +28,15 @@ import com.google.firebase.database.FirebaseDatabase;
 public class starup extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private NavController navigation;
-    private String currentuser;
 
-    //firebase
-    private FirebaseAuth fAuth;
-    FirebaseDatabase Database;
-    private DatabaseReference mUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_up);
 //        isOnline();
-        Database = FirebaseDatabase.getInstance();
-        mUser = Database.getReference("User");
+
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom);
         navigation = Navigation.findNavController(this, R.id.fragment);
         //NavigationUI.setupWithNavController(bottomNavigationView,navigation);
@@ -97,9 +93,17 @@ public class starup extends AppCompatActivity {
         transaction.commit();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        StaticConfig.mUser.child(StaticConfig.currentuser).child("status").setValue("online");
+    }
 
-
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        StaticConfig.mUser.child(StaticConfig.currentuser).child("status").setValue("offline");
+    }
 }
 
 

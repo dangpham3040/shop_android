@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -176,6 +177,8 @@ public class registration extends AppCompatActivity {
 
                 } else if (kiemtra() == true) {
                     btnregister.setEnabled(true);
+                    btnregister.setBackgroundColor(Color.BLUE);
+                    btnregister.setTextColor(Color.WHITE);
                 }
             }
         });
