@@ -275,8 +275,7 @@ public class registration extends AppCompatActivity {
         if (sex.getSelectedItemPosition() == 0) {
             gioitinh = "Nam";
         }
-
-
+        //Lấy id user làm key
         String keyid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         user = new User(keyid, fistname, lastname, Email, gioitinh, anh);
         mUser.child(keyid).setValue(user);

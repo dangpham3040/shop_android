@@ -2,7 +2,7 @@ package com.example.shop_android.model;
 
 public class Friend_Request {
     String idSender;
-   String idReceiver;
+    String idReceiver;
 
     public Friend_Request() {
 

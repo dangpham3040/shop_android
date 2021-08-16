@@ -100,16 +100,15 @@ public class friendrequest_Adapter extends ArrayAdapter {
             public void onClick(View v) {
 
                 //cho vào danh sách bạn của người dùng
-                 StaticConfig.mFriend.child(currentuser).child(request.getIdSender()).child("userID").setValue(currentuser);
-                 StaticConfig.mFriend.child(currentuser).child(request.getIdSender()).child("friendID").setValue(request.getIdSender());
+                StaticConfig.mFriend.child(currentuser).child(request.getIdSender()).child("userID").setValue(currentuser);
+                StaticConfig.mFriend.child(currentuser).child(request.getIdSender()).child("friendID").setValue(request.getIdSender());
                 //cho vào danh sách bạn của bạn
-                 StaticConfig.mFriend.child(request.getIdSender()).child(currentuser).child("userID").setValue(request.getIdSender());
-                 StaticConfig.mFriend.child(request.getIdSender()).child(currentuser).child("friendID").setValue(currentuser);
+                StaticConfig.mFriend.child(request.getIdSender()).child(currentuser).child("userID").setValue(request.getIdSender());
+                StaticConfig.mFriend.child(request.getIdSender()).child(currentuser).child("friendID").setValue(currentuser);
                 // xoá khỏi danh sách yêu cầu kết bạn
                 // cập nhập ui
                 fragment_friends.update(position);
-                StaticConfig.mfRequest.child(currentuser).child(request.getIdSender()).removeValue();
-
+                StaticConfig.mfRequest.child(request.getIdSender()).child(currentuser).removeValue();
             }
         });
         btnRemove.setOnClickListener(new View.OnClickListener() {

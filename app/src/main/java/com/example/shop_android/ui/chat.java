@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.shop_android.R;
 import com.example.shop_android.data.StaticConfig;
+import com.example.shop_android.model.Messages;
 import com.example.shop_android.ui.profile;
 import com.example.shop_android.ui.starup;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,8 +42,9 @@ public class chat extends AppCompatActivity {
     public String otherID = "";
     private String fist, last, status;
     private String userID = "";
-    //Firebase
+    private String idSender = StaticConfig.currentuser + "/" + otherID;
 
+    //Firebase
 
 
     @Override
@@ -56,10 +59,18 @@ public class chat extends AppCompatActivity {
         imgsend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!message.getText().toString().equals("")) {
 
-                //add friend
-//                String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//                mUser.child(currentuser).child("friends").child(otherID).child("friendsID").setValue(otherID);
+                    Messages messages = new Messages(StaticConfig.currentuser, otherID, message.getText().toString());
+                    //lưu tin nhắn người nhận người gửi trên firebase
+                    String idSender = StaticConfig.currentuser + "/" + otherID;
+                    String idReceiver = otherID + "/" + StaticConfig.currentuser;
+                    StaticConfig.mChat.child(idSender).push().setValue(messages);
+                    StaticConfig.mChat.child(idReceiver).push().setValue(messages);
+                    //xáo trắng
+                    message.setText("");
+
+                }
 
             }
         });
@@ -126,6 +137,26 @@ public class chat extends AppCompatActivity {
                     }
                 }
 
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+//        test chat
+        Query chattest = StaticConfig.mChat.child(StaticConfig.currentuser).child(otherID).orderByChild("timestamp");
+        chattest.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    if (ds.exists()) {
+                        Toast.makeText(chat.this, ds.child("text").getValue(String.class), Toast.LENGTH_SHORT).
+                                show();
+
+                    }
+                }
             }
 
             @Override
