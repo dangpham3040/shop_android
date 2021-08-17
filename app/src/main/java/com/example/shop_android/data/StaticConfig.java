@@ -25,4 +25,8 @@ public class StaticConfig {
     public static FirebaseUser updateUser = FirebaseAuth.getInstance().getCurrentUser();
     public static String Default_avatar = "https://firebasestorage.googleapis.com/v0/b/android-shop-ae9d2.appspot.com/o/Image%2Fuser.jpg?alt=media&token=710dd3aa-8bb1-4048-bb0f-13320ad94825";
 
+    //timestamp
+    public static Long tsLong = System.currentTimeMillis() / 1000;
+    public static String ts = tsLong.toString();
+
 }

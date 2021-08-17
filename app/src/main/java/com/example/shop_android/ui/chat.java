@@ -12,12 +12,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shop_android.R;
+import com.example.shop_android.adapter.MessageAdapter;
 import com.example.shop_android.data.StaticConfig;
 import com.example.shop_android.model.Messages;
+import com.example.shop_android.model.User;
 import com.example.shop_android.ui.profile;
 import com.example.shop_android.ui.starup;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,8 +31,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.core.Context;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 public class chat extends AppCompatActivity {
     //activity
@@ -37,15 +43,15 @@ public class chat extends AppCompatActivity {
     private CircularImageView ortherAvata;
     private TextView fullname, tvstatus;
     private EditText message;
+    private ListView listView;
+    private Messages messages;
+    private ArrayList<Messages> listMess = new ArrayList<>();
+    private MessageAdapter messageAdapter;
     //bien
-    private static final String TAG = "currentuser:";
+    private static final String TAG = "currentuser";
     public String otherID = "";
     private String fist, last, status;
     private String userID = "";
-    private String idSender = StaticConfig.currentuser + "/" + otherID;
-
-    //Firebase
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +75,8 @@ public class chat extends AppCompatActivity {
                     StaticConfig.mChat.child(idReceiver).push().setValue(messages);
                     //xáo trắng
                     message.setText("");
+                    //cập nhập
+                    messageAdapter.notifyDataSetChanged();
 
                 }
 
@@ -105,14 +113,15 @@ public class chat extends AppCompatActivity {
         imgbback = findViewById(R.id.imgback);
         message = findViewById(R.id.message);
         tvstatus = findViewById(R.id.status);
+        listView = findViewById(R.id.listmess);
 
         //Lấy otherID
         Bundle bundle = getIntent().getExtras();
         otherID = bundle.getString("otherID");
-        Log.d("otherID:", otherID);
-//        Toast.makeText(this, otherID, Toast.LENGTH_SHORT).show();
+        //Log.d("otherID:", otherID);
+
         userID = bundle.getString("userID");
-        Log.d(TAG, String.valueOf(userID));
+        // Log.d(TAG, String.valueOf(userID));
 
 
         //Load danh sách user sắp xếp bằng id
@@ -146,18 +155,25 @@ public class chat extends AppCompatActivity {
         });
 
 //        test chat
+        messageAdapter = new MessageAdapter(getApplicationContext(), R.layout.list_mess, listMess);
+        listView.setAdapter(messageAdapter);
         Query chattest = StaticConfig.mChat.child(StaticConfig.currentuser).child(otherID).orderByChild("timestamp");
         chattest.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //xoá list mess
+                listMess.removeAll(listMess);
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     if (ds.exists()) {
-                        Toast.makeText(chat.this, ds.child("text").getValue(String.class), Toast.LENGTH_SHORT).
-                                show();
+                        Messages tinnhan = new Messages();
+                        tinnhan = ds.getValue(Messages.class);
+                        listMess.add(tinnhan);
 
                     }
                 }
+                messageAdapter.notifyDataSetChanged();
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

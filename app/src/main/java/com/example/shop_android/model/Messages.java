@@ -1,18 +1,22 @@
 package com.example.shop_android.model;
 
+import com.example.shop_android.data.StaticConfig;
+
 public class Messages {
     String idSender;
     String idReceiver;
     String text;
     String timestamp;
-    Long tsLong = System.currentTimeMillis() / 1000;
-    String ts = tsLong.toString();
+
+    public Messages() {
+
+    }
 
     public Messages(String idSender, String idReceiver, String text) {
         this.idSender = idSender;
         this.idReceiver = idReceiver;
         this.text = text;
-        this.timestamp = ts;
+        this.timestamp = StaticConfig.ts;
     }
 
     public String getIdSender() {

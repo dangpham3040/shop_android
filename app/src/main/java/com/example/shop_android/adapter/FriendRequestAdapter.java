@@ -31,7 +31,7 @@ import com.squareup.picasso.Picasso;
 import java.sql.Array;
 import java.util.ArrayList;
 
-public class friendrequest_Adapter extends ArrayAdapter {
+public class FriendRequestAdapter extends ArrayAdapter {
     Context context;
     int resource;
     ArrayList<Friend_Request> data;
@@ -40,7 +40,7 @@ public class friendrequest_Adapter extends ArrayAdapter {
     String fullname = "";
     String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-    public friendrequest_Adapter(@NonNull Context context, int resource, ArrayList<Friend_Request> data) {
+    public FriendRequestAdapter(@NonNull Context context, int resource, ArrayList<Friend_Request> data) {
         super(context, resource, data);
         this.context = context;
         this.resource = resource;

@@ -13,10 +13,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
-    FirebaseDatabase Database;
-    DatabaseReference mUser;
 
-    String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,8 +21,6 @@ public class MainActivity extends AppCompatActivity {
         setControl();
 
     }
-
-
 
     private void setControl() {
 
@@ -41,8 +36,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(getApplicationContext(), Login.class));
                 }
             }
-        }, 3500);
-
+        }, 3000);
 
     }
 

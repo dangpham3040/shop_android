@@ -8,22 +8,15 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.shop_android.R;
-import com.example.shop_android.adapter.UserAdapter;
-import com.example.shop_android.adapter.friendrequest_Adapter;
+import com.example.shop_android.adapter.FriendRequestAdapter;
 import com.example.shop_android.data.StaticConfig;
 import com.example.shop_android.model.Friend_Request;
-import com.example.shop_android.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -50,7 +43,7 @@ public class fragment_friends extends Fragment {
 
 
     private ArrayList<Friend_Request> listfriends = new ArrayList<>();
-    private static friendrequest_Adapter friendrequest_adapter;
+    private static FriendRequestAdapter friendrequest_adapter;
     View view;
 
     public fragment_friends() {
@@ -104,7 +97,7 @@ public class fragment_friends extends Fragment {
 
         StaticConfig.mfRequest = StaticConfig.Database.getReference("friend_request/" + currentuser);
 
-        friendrequest_adapter = new friendrequest_Adapter(getContext(), R.layout.friends_request, listfriends);
+        friendrequest_adapter = new FriendRequestAdapter(getContext(), R.layout.friends_request, listfriends);
         listView.setAdapter(friendrequest_adapter);
 
         StaticConfig.mfRequest.addValueEventListener(new ValueEventListener() {

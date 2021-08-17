@@ -53,5 +53,7 @@ dependencies {
     compile 'com.makeramen:roundedimageview:2.3.0'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.mikhaellopez:circularimageview:4.2.0'
+    //implementation 'com.github.hani-momanii:SuperNova-Emoji:1.0'
+    //implementation 'com.github.lguipeng:BubbleView:1.0.1'
 
 }
