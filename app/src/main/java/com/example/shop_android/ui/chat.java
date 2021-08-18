@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -45,6 +47,7 @@ public class chat extends AppCompatActivity {
     private EditText message;
     private ListView listView;
     private Messages messages;
+    private String tin_nhan;
     private ArrayList<Messages> listMess = new ArrayList<>();
     private MessageAdapter messageAdapter;
     //bien
@@ -62,12 +65,29 @@ public class chat extends AppCompatActivity {
     }
 
     private void setEnvent() {
+        message.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (message.length() > 2) {
+                    tin_nhan = message.getText().toString() + "\n";
+                }
+            }
+        });
         imgsend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!message.getText().toString().equals("")) {
-
-                    Messages messages = new Messages(StaticConfig.currentuser, otherID, message.getText().toString());
+                    Messages messages = new Messages(StaticConfig.currentuser, otherID, tin_nhan);
                     //lưu tin nhắn người nhận người gửi trên firebase
                     String idSender = StaticConfig.currentuser + "/" + otherID;
                     String idReceiver = otherID + "/" + StaticConfig.currentuser;
@@ -122,7 +142,6 @@ public class chat extends AppCompatActivity {
 
         userID = bundle.getString("userID");
         // Log.d(TAG, String.valueOf(userID));
-
 
         //Load danh sách user sắp xếp bằng id
 

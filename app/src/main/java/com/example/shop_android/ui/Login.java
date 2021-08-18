@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shop_android.R;
+import com.example.shop_android.data.StaticConfig;
 import com.example.shop_android.ui.registration;
 import com.example.shop_android.ui.starup;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,7 +37,7 @@ public class Login extends AppCompatActivity {
     private TextView link_register;
     private Button btnlogin;
     private ProgressBar progressBar;
-    private String status="offline";
+    private String status = "offline";
     //bien
 
 
@@ -44,7 +45,6 @@ public class Login extends AppCompatActivity {
     private FirebaseAuth fAuth;
     private FirebaseDatabase Database;
     private DatabaseReference mUser;
-
 
 
     @Override
@@ -169,6 +169,7 @@ public class Login extends AppCompatActivity {
                 Database = FirebaseDatabase.getInstance();
                 mUser = Database.getReference("User");
                 String currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                StaticConfig.currentuser = currentuser;
                 mUser.child(currentuser).child("status").setValue("online");
 
             } else {
