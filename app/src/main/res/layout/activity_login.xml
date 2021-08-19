@@ -26,18 +26,21 @@
         android:orientation="vertical">
 
         <EditText
-
+            android:background="@drawable/ic_square"
             android:id="@+id/lemail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email" />
+            android:hint="@string/email"
+            android:layout_marginBottom="15dp"/>
 
         <EditText
+            android:background="@drawable/ic_square"
             android:id="@+id/lpass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/pass"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:layout_marginBottom="15dp"/>
 
         <Button
             android:id="@+id/btnlogin"

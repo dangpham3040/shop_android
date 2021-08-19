@@ -65,29 +65,12 @@ public class chat extends AppCompatActivity {
     }
 
     private void setEnvent() {
-        message.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (message.length() > 2) {
-                    tin_nhan = message.getText().toString() + "\n";
-                }
-            }
-        });
         imgsend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!message.getText().toString().equals("")) {
-                    Messages messages = new Messages(StaticConfig.currentuser, otherID, tin_nhan);
+                    Messages messages = new Messages(StaticConfig.currentuser, otherID, message.getText().toString());
                     //lưu tin nhắn người nhận người gửi trên firebase
                     String idSender = StaticConfig.currentuser + "/" + otherID;
                     String idReceiver = otherID + "/" + StaticConfig.currentuser;

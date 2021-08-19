@@ -1,18 +1,13 @@
 package com.example.shop_android.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Message;
-import android.text.Layout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.textclassifier.ConversationActions;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,9 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 
-import static com.example.shop_android.R.drawable.ic_baseline_chat;
-import static com.example.shop_android.R.drawable.ic_baseline_chat_bubble_24;
-import static com.example.shop_android.R.drawable.ic_baseline_rounded_corner_24;
+import static com.example.shop_android.R.drawable.ic_chat_bubble_other;
 
 
 public class MessageAdapter extends ArrayAdapter {
@@ -68,7 +61,7 @@ public class MessageAdapter extends ArrayAdapter {
                             params.weight = 1.0f;
                             params.gravity = Gravity.RIGHT;
                             linearLayout.setLayoutParams(params);
-                            linearLayout.setBackgroundResource(ic_baseline_chat);
+                            linearLayout.setBackgroundResource(ic_chat_bubble_other);
                         }
                     }
                 }
