@@ -25,5 +25,10 @@
         android:label="fragment_friends"
         tools:layout="@layout/fragment_friends"
        />
+    <fragment
+        android:id="@+id/fragment_shop"
+        android:name="com.example.shop_android.fragment.fragment_shop"
+        android:label="fragment_shop"
+        tools:layout="@layout/fragment_shop" />
 
 </navigation>

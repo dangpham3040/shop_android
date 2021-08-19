@@ -19,6 +19,7 @@ import com.example.shop_android.data.StaticConfig;
 import com.example.shop_android.fragment.fragment_contact;
 import com.example.shop_android.fragment.fragment_friends;
 import com.example.shop_android.fragment.fragment_profile;
+import com.example.shop_android.fragment.fragment_shop;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,6 +59,10 @@ public class starup extends AppCompatActivity {
                         return true;
                     case R.id.fragment_friends:
                         fragment = new fragment_friends();
+                        loadFragment(fragment);
+                        return true;
+                    case R.id.fragment_shop:
+                        fragment = new fragment_shop();
                         loadFragment(fragment);
                         return true;
                 }

@@ -12,6 +12,7 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.shop_android.R;
 import com.example.shop_android.adapter.UserAdapter;
@@ -55,13 +56,8 @@ public class fragment_contact extends Fragment {
 
 
     private void setControl() {
-
         listView = (ListView) view.findViewById(R.id.list);
         userAdapter = new UserAdapter(getContext(), R.layout.list_user, listuser);
-
-
-        //lấy id của user hiện tại
-
         listView.setAdapter(userAdapter);
         //load list user
         StaticConfig.mUser.addValueEventListener(new ValueEventListener() {
@@ -94,7 +90,7 @@ public class fragment_contact extends Fragment {
                 User user = listuser.get(position);
                 String full = user.getFist() + " " + user.getLast();
                 Log.d(TAG, full);
-                otherID = user.getId().toString();
+                otherID = user.getId();
 
                 StaticConfig.mFriend.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

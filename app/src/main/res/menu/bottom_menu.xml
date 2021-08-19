@@ -3,17 +3,22 @@
 
     <item
         android:id="@+id/fragment_contact"
+        android:enabled="true"
         android:icon="@drawable/ic_contacts"
-        android:title="@string/Contact"
-        android:enabled="true"/>
+        android:title="@string/Contact" />
     <item
-    android:id="@+id/fragment_friends"
-    android:icon="@drawable/ic_people"
-    android:title="@string/friends"
-    android:enabled="true"/>
+        android:id="@+id/fragment_friends"
+        android:enabled="true"
+        android:icon="@drawable/ic_people"
+        android:title="@string/friends" />
     <item
         android:id="@+id/fragment_profile"
+        android:enabled="true"
         android:icon="@drawable/ic_settings"
-        android:title="@string/setting"
-        android:enabled="true"/>
+        android:title="@string/setting" />
+    <item
+        android:id="@+id/fragment_shop"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_shopping_cart_24"
+        android:title="@string/shop" />
 </menu>
