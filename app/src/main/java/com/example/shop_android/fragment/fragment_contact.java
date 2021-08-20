@@ -56,7 +56,7 @@ public class fragment_contact extends Fragment {
 
 
     private void setControl() {
-        listView = (ListView) view.findViewById(R.id.list);
+        listView =  view.findViewById(R.id.list);
         userAdapter = new UserAdapter(getContext(), R.layout.list_user, listuser);
         listView.setAdapter(userAdapter);
         //load list user

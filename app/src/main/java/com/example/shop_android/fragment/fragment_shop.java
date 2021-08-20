@@ -7,8 +7,14 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 import com.example.shop_android.R;
+import com.example.shop_android.adapter.productAdapter;
+import com.example.shop_android.data.StaticConfig;
+import com.example.shop_android.model.product;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +31,10 @@ public class fragment_shop extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    View view;
+    ArrayList<product> list_product = new ArrayList<>();
+    productAdapter adapter;
+    GridView gridView;
 
     public fragment_shop() {
         // Required empty public constructor
@@ -61,6 +71,34 @@ public class fragment_shop extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_shop, container, false);
+        view = inflater.inflate(R.layout.fragment_shop, container, false);
+        // Inflate the layout for this fragment
+
+        setControl();
+        //setEnvet();
+        return view;
+    }
+
+    private void setControl() {
+        gridView = view.findViewById(R.id.GridView);
+        khoitao();
+        adapter = new productAdapter(getContext(), R.layout.list_shop, list_product);
+        gridView.setAdapter(adapter);
+    }
+
+    private void khoitao() {
+        product sp1 = new product("san pham 1", StaticConfig.Default_avatar);
+        product sp2 = new product("san pham 1", StaticConfig.Default_avatar);
+        product sp3 = new product("san pham 1", StaticConfig.Default_avatar);
+        product sp4 = new product("san pham 1", StaticConfig.Default_avatar);
+        product sp5 = new product("san pham 1", StaticConfig.Default_avatar);
+        product sp6 = new product("san pham 1", StaticConfig.Default_avatar);
+
+        list_product.add(sp1);
+        list_product.add(sp2);
+        list_product.add(sp3);
+        list_product.add(sp4);
+        list_product.add(sp5);
+
     }
 }

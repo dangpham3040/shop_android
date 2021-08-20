@@ -84,17 +84,13 @@ public class fragment_friends extends Fragment {
         // Inflate the layout for this fragment
 
         setControl();
-        setEnvet();
         return view;
         // Inflate the layout for this fragment
     }
 
     private void setControl() {
         listView = view.findViewById(R.id.listfriend);
-
         currentuser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-
         StaticConfig.mfRequest = StaticConfig.Database.getReference("friend_request/" + currentuser);
 
         friendrequest_adapter = new FriendRequestAdapter(getContext(), R.layout.friends_request, listfriends);
@@ -129,7 +125,5 @@ public class fragment_friends extends Fragment {
         friendrequest_adapter.remove(i);
     }
 
-    private void setEnvet() {
 
-    }
 }
